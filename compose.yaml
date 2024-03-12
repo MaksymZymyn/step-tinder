@@ -1,0 +1,15 @@
+version: '3.9'
+name: 'step-tinder'
+
+services:
+  postgres:
+    image: postgres:9.6
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'pg123456'
+    ports:
+      - '9090:5432'
+    volumes:
+      - ./.data/postgres:/var/lib/postgresql/data/
+    container_name: pg_0
