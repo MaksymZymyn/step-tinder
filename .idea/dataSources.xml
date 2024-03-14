@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="tinder@localhost" uuid="92bbb330-2fac-4f1d-a702-1e9e0cab4851">
+    <data-source source="LOCAL" name="tinder@step-tinder.c5g0cgqqgsrf.eu-north-1.rds.amazonaws.com" uuid="2c7190b4-1f18-4fe5-b2a5-4e9ec1c12aa6">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:9090/tinder</jdbc-url>
+      <jdbc-url>jdbc:postgresql://step-tinder.c5g0cgqqgsrf.eu-north-1.rds.amazonaws.com:5432/postgres</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
