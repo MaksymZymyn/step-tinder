@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class Database {
 
     @SneakyThrows
-    public static Connection create(String url, String username, String password) {
+    public static Connection connect(String url, String username, String password) {
         return DriverManager.getConnection(url, username, password);
     }
 

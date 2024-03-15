@@ -3,6 +3,7 @@ package likes;
 import database.Database;
 import utils.dao.DAO;
 import utils.environment.ConnectionDetails;
+import utils.environment.HerokuEnv;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,7 +17,7 @@ import java.util.function.Predicate;
 public class LikesDAO implements DAO<Like>{
 
     private Connection getConnection() throws SQLException {
-        return Database.create(ConnectionDetails.getUrl(), ConnectionDetails.getUsername(), ConnectionDetails.getPassword());
+        return  Database.connect(HerokuEnv.jdbc_url(), HerokuEnv.jdbc_username(), HerokuEnv.jdbc_password());
     }
 
     private Like createLikeFromResultSet(ResultSet resultSet) throws SQLException {
@@ -91,7 +92,7 @@ public class LikesDAO implements DAO<Like>{
     @Override
     public void put(Like like) {
         String sql = "INSERT INTO user_likes (user_from, user_to, value) VALUES (?, ?, ?)";
-        try (Connection conn = Database.create(ConnectionDetails.getUrl(), ConnectionDetails.getUsername(), ConnectionDetails.getPassword());
+        try (Connection conn = Database.connect(HerokuEnv.jdbc_url(), HerokuEnv.jdbc_username(), HerokuEnv.jdbc_password());
              PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
 
             preparedStatement.setInt(1, like.getUser_from());
@@ -108,7 +109,7 @@ public class LikesDAO implements DAO<Like>{
     public void delete(int id) {
         List<Like> likes = new ArrayList<>();
         String sql = "DELETE FROM user_likes WHERE id = ?";
-        try (Connection conn = Database.create(ConnectionDetails.getUrl(), ConnectionDetails.getUsername(), ConnectionDetails.getPassword());
+        try (Connection conn = getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
 
             preparedStatement.setInt(1, id);
@@ -121,7 +122,7 @@ public class LikesDAO implements DAO<Like>{
     public List<Like> findByUserFrom(Integer user_fromId) throws SQLException{
         List<Like> likes = new ArrayList<>();
         String sql = "SELECT * FROM user_likes WHERE user_from = ?";
-        try (Connection conn = Database.create(ConnectionDetails.getUrl(), ConnectionDetails.getUsername(), ConnectionDetails.getPassword());
+        try (Connection conn = getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
 
              preparedStatement.setInt(1, user_fromId);

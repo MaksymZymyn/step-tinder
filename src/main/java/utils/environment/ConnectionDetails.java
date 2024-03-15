@@ -2,15 +2,8 @@ package utils.environment;
 
 public class ConnectionDetails {
 
-    public static String getUrl() {
-        return System.getenv("jdbc_url");
-    }
+    public static final String url = System.getenv("jdbc_url");
+    public static final String username = System.getenv("jdbc_username");
+    public static final String password = System.getenv("jdbc_password");
 
-    public static String getUsername() {
-        return System.getenv("jdbc_username");
-    }
-
-    public static String getPassword() {
-        return System.getenv("jdbc_password");
-    }
 }

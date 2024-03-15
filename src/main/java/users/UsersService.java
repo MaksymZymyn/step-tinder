@@ -4,6 +4,7 @@ import database.Database;
 import exceptions.DatabaseException;
 import exceptions.NotFoundException;
 import utils.environment.ConnectionDetails;
+import utils.environment.HerokuEnv;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -13,7 +14,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class UsersService {
-    Connection conn = Database.create(ConnectionDetails.getUrl(), ConnectionDetails.getUsername(), ConnectionDetails.getPassword());
+    Connection conn = Database.connect(HerokuEnv.jdbc_url(), HerokuEnv.jdbc_username(), HerokuEnv.jdbc_password());
 
     private final UsersDAO db = new UsersDAO(conn);
 
