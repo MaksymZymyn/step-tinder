@@ -4,10 +4,7 @@ import database.Database;
 import utils.exceptions.InvalidUserDataException;
 import utils.misc.Password;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.UUID;
 
 public class UserDAO {

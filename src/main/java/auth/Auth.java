@@ -1,16 +1,10 @@
 package auth;
 
-import users.User;
-import users.UserService;
+import users.*;
 import utils.exceptions.InvalidUserDataException;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class Auth {
 
@@ -43,4 +37,13 @@ public class Auth {
         return service.get(UUID.fromString(getCookieValueForced(rq)));
     }
 
+    public static void clearCookie(HttpServletResponse rs) {
+        Cookie cookie = new Cookie(cookieName, "");
+        cookie.setMaxAge(0);
+        rs.addCookie(cookie);
+    }
+
+    public static void renderUnregistered(HttpServletResponse resp) {
+        resp.setStatus(401);
+    }
 }

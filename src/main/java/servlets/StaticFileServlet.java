@@ -2,7 +2,6 @@ package servlets;
 
 import utils.resources.ResourceOps;
 
-import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +21,7 @@ public class StaticFileServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest rq, HttpServletResponse rs) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest rq, HttpServletResponse rs) throws IOException {
         String prefix = ResourceOps.resourceUnsafe(root);
         String fileName = rq.getPathInfo();
         String fullName = prefix + fileName;
