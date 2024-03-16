@@ -1,2 +1,0 @@
-### test: print "Hello world"
-GET http://localhost:8080/hello
