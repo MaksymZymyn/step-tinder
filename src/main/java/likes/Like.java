@@ -1,46 +1,61 @@
 package likes;
 
-import utils.interfaces.HasId;
+import utils.exceptions.InvalidLikeDataException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
-import java.io.Serial;
-import java.io.Serializable;
+public class Like {
 
-public class Like implements Serializable, HasId {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
-    private final int id;
-    private final int user_from;
-    private final int user_to;
+    private final UUID id;
+    private final UUID user_from;
+    private final UUID user_to;
     private final boolean value;
-    private final long created_at;
+    private final String created_at;
 
-    public Like(int id, int user_from, int user_to, boolean value, long created_at) {
+    public Like(UUID id, UUID user_from, UUID user_to, boolean value) {
         this.id = id;
         this.user_from = user_from;
         this.user_to = user_to;
         this.value = value;
-        this.created_at = created_at;
+        this.created_at = formatDateTime(LocalDateTime.now());
     }
 
-    @Override
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public int getUser_from() {
+    public UUID getUser_from() {
         return user_from;
     }
 
-    public int getUser_to() {
+    public UUID getUser_to() {
         return user_to;
     }
 
-    public boolean getValue() {
+    public boolean isValue() {
         return value;
     }
 
-    public long getCreated_at() {
+    public String getCreated_at() {
         return created_at;
+    }
+
+    public static Like fromRS(ResultSet rs) throws SQLException, InvalidLikeDataException {
+        UUID id = rs.getObject("id", UUID.class);
+        UUID user_from = rs.getObject("user_from", UUID.class);
+        UUID user_to = rs.getObject("user_to", UUID.class);
+        Boolean value = rs.getBoolean("value");
+
+        if (id == null || user_from == null || user_to == null || value == null) throw new InvalidLikeDataException();
+
+        return new Like(id, user_from, user_to, value);
+    }
+
+    private static String formatDateTime(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return dateTime.format(formatter);
     }
 }

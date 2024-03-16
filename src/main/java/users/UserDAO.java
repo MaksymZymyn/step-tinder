@@ -15,10 +15,10 @@ public class UserDAO {
   public User get(String username) throws SQLException, InvalidUserDataException {
     try (Connection conn = Database.connect()) {
       String select = """
-                    SELECT id, username, full_name, picture, password
-                    FROM users
-                    WHERE username=?
-                    """;
+                      SELECT id, username, full_name, picture, password
+                      FROM users
+                      WHERE username=?
+                      """;
 
       PreparedStatement st = conn.prepareStatement(select);
       st.setString(1, username);
@@ -33,10 +33,10 @@ public class UserDAO {
   public User get(UUID id) throws SQLException, InvalidUserDataException {
     try (Connection conn = Database.connect()) {
       String select = """
-                    SELECT id, username, full_name, picture, password
-                    FROM users
-                    WHERE id=?
-                    """;
+                      SELECT id, username, full_name, picture, password
+                      FROM users
+                      WHERE id=?
+                      """;
 
       PreparedStatement st = conn.prepareStatement(select);
       st.setObject(1, id);
@@ -51,9 +51,9 @@ public class UserDAO {
   public User insert(String username, String fullName, String picture, String password) throws SQLException {
     try (Connection conn = Database.connect()) {
       String insert = """
-                    INSERT INTO users (id, username, full_name, picture, password)
-                    values (?, ?, ?, ?, ?)
-                    """;
+                      INSERT INTO users (id, username, full_name, picture, password)
+                      VALUES (?, ?, ?, ?, ?)
+                      """;
 
       PreparedStatement st = conn.prepareStatement(insert);
       UUID uuid = UUID.randomUUID();
