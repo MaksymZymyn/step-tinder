@@ -43,13 +43,4 @@ public class Auth {
         return service.get(UUID.fromString(getCookieValueForced(rq)));
     }
 
-    public static void clearCookie(HttpServletResponse rs) {
-        Cookie cookie = new Cookie(cookieName, "");
-        cookie.setMaxAge(0);
-        rs.addCookie(cookie);
-    }
-
-    public static void renderUnregistered(HttpServletResponse resp) {
-        resp.setStatus(401);
-    }
 }

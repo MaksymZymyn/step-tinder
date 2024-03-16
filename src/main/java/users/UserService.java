@@ -20,7 +20,7 @@ public class UserService {
         return dao.get(id);
     }
 
-    public User insert(String username, String fullName, String picture, String password) throws SQLException {
-        return dao.insert(username, fullName, picture, password);
+    public void insert(String username, String fullName, String picture, String password) throws SQLException {
+        dao.insert(username, fullName, picture, password);
     }
 }

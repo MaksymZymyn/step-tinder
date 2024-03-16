@@ -1,5 +1,6 @@
 package utils.misc;
 
+
 import org.mindrot.jbcrypt.BCrypt;
 
 public class Password {
