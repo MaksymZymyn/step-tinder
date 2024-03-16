@@ -3,6 +3,7 @@ package auth;
 import users.*;
 import utils.exceptions.InvalidUserDataException;
 import javax.servlet.http.*;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -43,7 +44,7 @@ public class Auth {
         rs.addCookie(cookie);
     }
 
-    public static void renderUnregistered(HttpServletResponse resp) {
-        resp.setStatus(401);
+    public static void renderUnregistered(HttpServletResponse rs) throws IOException {
+        rs.sendRedirect("/login");
     }
 }

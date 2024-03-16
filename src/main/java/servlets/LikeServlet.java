@@ -1,7 +1,6 @@
 package servlets;
 
 import likes.*;
-import lombok.SneakyThrows;
 import users.*;
 import auth.Auth;
 import utils.exceptions.InvalidUserDataException;
@@ -17,9 +16,9 @@ public class LikeServlet extends HttpServlet {
     private final UserService userService;
     private final LikeService likeService;
 
-    public LikeServlet(UserService userService, LikeService likeService) {
-        this.userService = userService;
-        this.likeService = likeService;
+    public LikeServlet() {
+        this.userService = new UserService(new UserDAO());
+        this.likeService = new LikeService(new LikeDAO());
     }
 
     @Override
@@ -67,7 +66,13 @@ public class LikeServlet extends HttpServlet {
                                 throw new RuntimeException(e);
                             }
                         },
-                        () -> Auth.renderUnregistered(resp)
+                        () -> {
+                            try {
+                                Auth.renderUnregistered(resp);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
                 );
     }
 
