@@ -1,9 +1,7 @@
 package likes;
 
 import database.Database;
-import utils.dao.DAO;
-import utils.environment.ConnectionDetails;
-import utils.environment.HerokuEnv;
+import utils.interfaces.DAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,10 +13,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class LikesDAO implements DAO<Like>{
-
-    private Connection getConnection() throws SQLException {
-        return  Database.connect(HerokuEnv.jdbc_url(), HerokuEnv.jdbc_username(), HerokuEnv.jdbc_password());
-    }
 
     private Like createLikeFromResultSet(ResultSet resultSet) throws SQLException {
         return new Like(
@@ -33,7 +27,7 @@ public class LikesDAO implements DAO<Like>{
     public List<Like> getAll() {
         List<Like> likes = new ArrayList<>();
         String sql = "SELECT * FROM user_likes";
-        try (Connection conn = getConnection();
+        try (Connection conn = Database.connect();
              PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -51,7 +45,7 @@ public class LikesDAO implements DAO<Like>{
     @Override
     public Optional<Like> get(int likeId) {
         String sql = "SELECT * FROM user_likes WHERE id = ?";
-        try (Connection conn = getConnection();
+        try (Connection conn = Database.connect();
              PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
 
             preparedStatement.setInt(1, likeId);
@@ -71,7 +65,7 @@ public class LikesDAO implements DAO<Like>{
     public List<Like> getBy(Predicate<Like> p) {
         List<Like> likes = new ArrayList<>();
         String sql = "SELECT * FROM user_likes";
-        try (Connection conn = getConnection();
+        try (Connection conn = Database.connect();
              PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -92,7 +86,7 @@ public class LikesDAO implements DAO<Like>{
     @Override
     public void put(Like like) {
         String sql = "INSERT INTO user_likes (user_from, user_to, value) VALUES (?, ?, ?)";
-        try (Connection conn = Database.connect(HerokuEnv.jdbc_url(), HerokuEnv.jdbc_username(), HerokuEnv.jdbc_password());
+        try (Connection conn = Database.connect();
              PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
 
             preparedStatement.setInt(1, like.getUser_from());
@@ -109,7 +103,7 @@ public class LikesDAO implements DAO<Like>{
     public void delete(int id) {
         List<Like> likes = new ArrayList<>();
         String sql = "DELETE FROM user_likes WHERE id = ?";
-        try (Connection conn = getConnection();
+        try (Connection conn = Database.connect();
              PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
 
             preparedStatement.setInt(1, id);
@@ -122,7 +116,7 @@ public class LikesDAO implements DAO<Like>{
     public List<Like> findByUserFrom(Integer user_fromId) throws SQLException{
         List<Like> likes = new ArrayList<>();
         String sql = "SELECT * FROM user_likes WHERE user_from = ?";
-        try (Connection conn = getConnection();
+        try (Connection conn = Database.connect();
              PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
 
              preparedStatement.setInt(1, user_fromId);

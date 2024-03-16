@@ -2,6 +2,7 @@ package utils;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
+import utils.resources.ResourceOps;
 
 import java.io.File;
 import java.io.IOException;

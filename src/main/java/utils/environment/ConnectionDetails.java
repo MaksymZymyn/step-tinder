@@ -1,6 +1,6 @@
 package utils.environment;
 
-public class ConnectionDetails {
+class ConnectionDetails {
 
     public static final String url = System.getenv("jdbc_url");
     public static final String username = System.getenv("jdbc_username");

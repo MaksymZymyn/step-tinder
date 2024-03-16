@@ -1,29 +1,60 @@
 package users;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import utils.dao.HasId;
-import java.io.Serial;
-import java.io.Serializable;
+import utils.exceptions.InvalidUserDataException;
+import utils.misc.Password;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class User implements Serializable, HasId {
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.UUID;
 
-  @Serial
-  private static final long serialVersionUID = 1234567L;
-  private int id;
-  private String username;
-  private String password;
-  private String email;
-  private String avatar;
-  private Boolean like;
-  private long created_at;
+public class User {
+  private final UUID id;
+  private final String username;
+  private final String fullName;
+  private String picture;
+  private final String password;
 
-  @Override
-  public int getId() {
+  User(UUID id, String username, String fullName, String picture, String password) {
+    this.id = id;
+    this.username = username;
+    this.fullName = fullName;
+    this.picture = picture;
+    this.password = password;
+  }
+
+  public static User fromRS(ResultSet rs) throws SQLException, InvalidUserDataException {
+    UUID id = rs.getObject("id", UUID.class);
+    String username = rs.getString("username");
+    String fullName = rs.getString("full_name");
+    String picture = rs.getString("picture");
+    String password = rs.getString("password");
+
+    if (id == null || username == null || fullName == null || picture == null || password == null) throw new InvalidUserDataException();
+
+    return new User(id, username, fullName, picture, password);
+  }
+
+  public boolean checkPassword(String pw) {
+    return Password.check(pw, password);
+  }
+
+  public String getFullName() {
+    return fullName;
+  }
+
+  public String getPicture() {
+    return picture;
+  }
+
+  public void setPicture(String p) {
+    this.picture = p;
+  }
+
+  public UUID getId() {
     return id;
+  }
+
+  public String getUsername() {
+    return username;
   }
 }

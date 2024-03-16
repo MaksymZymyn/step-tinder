@@ -1,4 +1,4 @@
-package utils.dao;
+package utils.interfaces;
 
 public interface HasId {
     int getId();

@@ -1,6 +1,4 @@
-package utils.dao;
-
-import lombok.SneakyThrows;
+package utils.interfaces;
 
 import java.util.List;
 import java.util.Optional;

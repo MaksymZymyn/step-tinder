@@ -1,6 +1,6 @@
 package likes;
 
-import utils.dao.HasId;
+import utils.interfaces.HasId;
 
 import java.io.Serial;
 import java.io.Serializable;
