@@ -48,26 +48,22 @@ public class UserDAO {
         }
     }
 
-    public User insert(String username, String fullName, String picture, String password) throws SQLException {
+    public void insert(String username, String fullName, String picture, String password) throws SQLException {
         try (Connection conn = Database.connect()) {
             String insert = """
-                    INSERT INTO users (id, username, full_name, picture, password)
-                    values (?, ?, ?, ?, ?)
+                    INSERT INTO users (username, full_name, picture, password)
+                    values (?, ?, ?, ?)
                     """;
 
             PreparedStatement st = conn.prepareStatement(insert);
-            UUID uuid = UUID.randomUUID();
             String pass = Password.hash(password);
 
-            st.setObject(1, uuid);
-            st.setString(2, username);
-            st.setString(3, fullName);
-            st.setString(4, picture);
-            st.setString(5, pass);
+            st.setString(1, username);
+            st.setString(2, fullName);
+            st.setString(3, picture);
+            st.setString(4, pass);
 
             int ignoredN = st.executeUpdate();
-
-            return new User(uuid, username, fullName, picture, pass);
         }
     }
 }
