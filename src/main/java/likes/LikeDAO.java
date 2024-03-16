@@ -5,14 +5,8 @@ import lombok.SneakyThrows;
 import utils.exceptions.InvalidLikeDataException;
 import utils.interfaces.DAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.Optional;
+import java.sql.*;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class LikeDAO implements DAO<Like> {
