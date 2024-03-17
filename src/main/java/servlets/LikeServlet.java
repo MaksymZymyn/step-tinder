@@ -14,13 +14,19 @@ import java.io.*;
 import java.sql.SQLException;
 import java.util.*;
 
-@AllArgsConstructor
+
 @Data
 public class LikeServlet extends HttpServlet {
 
     UserService userService;
     LikeService likeService;
     FreemarkerService freemarker;
+
+    public LikeServlet() throws IOException {
+        this.userService = new UserService(new UserDAO());
+        this.likeService = new LikeService(new LikeDAO());
+        this.freemarker = new FreemarkerService("templates");
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
