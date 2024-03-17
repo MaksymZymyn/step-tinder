@@ -1,11 +1,9 @@
 package servlets;
 
 import likes.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import users.*;
 import auth.Auth;
-import utils.exceptions.InvalidUserDataException;
 import utils.FreemarkerService;
 import utils.exceptions.UserNotFoundException;
 
@@ -59,7 +57,7 @@ public class LikeServlet extends HttpServlet {
 
                             data.put("full_name", currentUser.getFullName());
                             try (PrintWriter w = resp.getWriter()) {
-                                freemarker.render("people-list.html", data, w);
+                                freemarker.render("people-list.ftl", data, w);
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
@@ -76,7 +74,9 @@ public class LikeServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        // Redirect to the doGet method
-        resp.sendRedirect(req.getRequestURI());
+        HashMap<String, Object> data = new HashMap<>();
+        try (PrintWriter w = resp.getWriter()) {
+            freemarker.render("people-list.ftl", data, w);
+        }
     }
 }

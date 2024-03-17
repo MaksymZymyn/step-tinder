@@ -16,8 +16,12 @@ public class LikeService {
         return likeDAO.get(id);
     }
 
-    public boolean getByChoice(UUID user_to, boolean liked) {
-        List<Like> likes = likeDAO.getByChoice(liked);
+    public List<Like> getByChoice(boolean liked) {
+        return likeDAO.getByChoice(liked);
+    }
+
+    public boolean hasBeenLiked(UUID user_to) {
+        List<Like> likes = likeDAO.getByChoice(true);
         return likes.stream().anyMatch(like -> like.getUser_to().equals(user_to));
     }
 }

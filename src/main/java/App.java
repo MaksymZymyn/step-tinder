@@ -1,10 +1,11 @@
 import database.DatabaseSetup;
+import filters.AuthFilter;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-import servlets.LikeServlet;
-import servlets.StaticFileServlet;
+import org.eclipse.jetty.servlet.*;
+import servlets.*;
 import utils.environment.HerokuEnv;
+import javax.servlet.DispatcherType;
+import java.util.EnumSet;
 
 public class App {
     public static void main(String[] args) throws Exception {
@@ -15,7 +16,11 @@ public class App {
         ServletContextHandler handler = new ServletContextHandler();
 
         handler.addServlet(new ServletHolder(new StaticFileServlet("static")), "/static/*");
-        handler.addServlet(new ServletHolder(new LikeServlet()), "/likes");
+        handler.addServlet(new ServletHolder(new StaticFileServlet("static")), "/css/*");
+        handler.addServlet(new ServletHolder(new UserServlet()), "/users");
+        handler.addServlet(new ServletHolder(new LikeServlet()), "/liked");
+        handler.addFilter(AuthFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
+        handler.addServlet(new ServletHolder(new LoginServlet()), "/login");
 
         server.setHandler(handler);
 
