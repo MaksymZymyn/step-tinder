@@ -22,8 +22,8 @@ public class LikeService {
     }
 
     @SneakyThrows(SQLException.class)
-    public boolean hasBeenLiked(UUID id, UUID user_to) {
-        List<Like> likes = likeDAO.get(like -> like.getId().equals(id));
+    public boolean getByChoice(UUID user_to, boolean liked) {
+        List<Like> likes = likeDAO.getByChoice(liked);
         return likes.stream().anyMatch(like -> like.getUser_to().equals(user_to));
     }
 }

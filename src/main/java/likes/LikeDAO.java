@@ -4,10 +4,8 @@ import database.Database;
 import lombok.SneakyThrows;
 import utils.exceptions.InvalidLikeDataException;
 import utils.interfaces.DAO;
-
 import java.sql.*;
 import java.util.*;
-import java.util.function.Predicate;
 
 public class LikeDAO implements DAO<Like> {
 
@@ -17,7 +15,7 @@ public class LikeDAO implements DAO<Like> {
 
         try (Connection connection = Database.connect()) {
             String sql = "INSERT INTO likes(user_from, user_to, value) " +
-                    "VALUES (?, ?, ?)";
+                         "VALUES (?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
 
             statement.setObject(1, like.getUser_from());
@@ -47,26 +45,21 @@ public class LikeDAO implements DAO<Like> {
     }
 
     @SneakyThrows(SQLException.class)
-    public List<Like> get(Predicate<Like> predicate) {
+    public List<Like> getByChoice(boolean value) {
         List<Like> filteredLikes = new ArrayList<>();
-        List<Like> allLikes = new ArrayList<>();
 
         try (Connection connection = Database.connect()) {
-            String sql = "SELECT * FROM likes";
+            String sql = "SELECT * FROM likes WHERE value=?";
             PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setBoolean(1, value);
             ResultSet resultSet = statement.executeQuery();
+
             while (resultSet.next()) {
                 UUID id = UUID.fromString(resultSet.getString("id"));
                 UUID user_from = UUID.fromString(resultSet.getString("user_from"));
                 UUID user_to = UUID.fromString(resultSet.getString("user_to"));
-                boolean value = resultSet.getBoolean("value");
-
-                allLikes.add(new Like(id, user_from, user_to, value));
-            }
-        }
-
-        for (Like like : allLikes) {
-            if (predicate.test(like)) {
+                boolean likeValue = resultSet.getBoolean("value");
+                Like like = new Like(id, user_from, user_to, likeValue);
                 filteredLikes.add(like);
             }
         }
