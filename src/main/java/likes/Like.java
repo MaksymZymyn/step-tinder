@@ -1,38 +1,18 @@
 package likes;
 
+import lombok.*;
 import utils.exceptions.InvalidLikeDataException;
 import java.sql.*;
 import java.util.UUID;
 
+@AllArgsConstructor
+@Data
 public class Like {
 
-    private final UUID id;
-    private final UUID user_from;
-    private final UUID user_to;
-    private final boolean value;
-
-    public Like(UUID id, UUID user_from, UUID user_to, boolean value) {
-        this.id = id;
-        this.user_from = user_from;
-        this.user_to = user_to;
-        this.value = value;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public UUID getUser_from() {
-        return user_from;
-    }
-
-    public UUID getUser_to() {
-        return user_to;
-    }
-
-    public boolean isValue() {
-        return value;
-    }
+    UUID id;
+    UUID user_from;
+    UUID user_to;
+    boolean value;
 
     public static Like fromRS(ResultSet rs) throws SQLException, InvalidLikeDataException {
         UUID id = rs.getObject("id", UUID.class);

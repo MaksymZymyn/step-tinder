@@ -1,28 +1,29 @@
 package likes;
 
+import lombok.*;
+import utils.exceptions.InvalidLikeDataException;
+
+import java.sql.SQLException;
 import java.util.*;
 
+@AllArgsConstructor
+@Data
 public class LikeService {
-    private final LikeDAO likeDAO;
+    LikeDAO likeDAO;
 
-    public LikeService(LikeDAO likeDAO) {
-        this.likeDAO = likeDAO;
+    @SneakyThrows(SQLException.class)
+    public void insert(Like like) {
+        likeDAO.insert(like);
     }
 
-    public void save(Like like) {
-        likeDAO.save(like);
-    }
-
+    @SneakyThrows({SQLException.class, InvalidLikeDataException.class})
     public Optional<Like> get(UUID id) {
         return likeDAO.get(id);
     }
 
+    @SneakyThrows(SQLException.class)
     public boolean hasBeenLiked(UUID id, UUID user_to) {
-        List<Like> likes = likeDAO.getBy(like -> like.getId().equals(id));
+        List<Like> likes = likeDAO.get(like -> like.getId().equals(id));
         return likes.stream().anyMatch(like -> like.getUser_to().equals(user_to));
-    }
-
-    public void delete(UUID id) {
-        likeDAO.delete(id);
     }
 }

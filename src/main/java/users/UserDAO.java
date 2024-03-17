@@ -2,14 +2,14 @@ package users;
 
 import database.Database;
 import utils.exceptions.InvalidUserDataException;
-import utils.misc.Password;
+import utils.interfaces.DAO;
 
 import java.sql.*;
-import java.util.UUID;
+import java.util.*;
 
-public class UserDAO {
+public class UserDAO implements DAO<User> {
 
-    public User get(String username) throws SQLException, InvalidUserDataException {
+    public Optional<User> get(String username) throws SQLException {
         try (Connection conn = Database.connect()) {
             String select = """
                     SELECT id, username, full_name, picture, password
@@ -23,11 +23,14 @@ public class UserDAO {
             ResultSet rs = st.executeQuery();
             rs.next();
 
-            return User.fromRS(rs);
+            return Optional.of(User.fromRS(rs));
+        } catch (InvalidUserDataException e) {
+            return Optional.empty();
         }
     }
 
-    public User get(UUID id) throws SQLException, InvalidUserDataException {
+    @Override
+    public Optional<User> get(UUID id) throws SQLException {
         try (Connection conn = Database.connect()) {
             String select = """
                     SELECT id, username, full_name, picture, password
@@ -41,11 +44,14 @@ public class UserDAO {
             ResultSet rs = st.executeQuery();
             rs.next();
 
-            return User.fromRS(rs);
+            return Optional.of(User.fromRS(rs));
+        } catch (InvalidUserDataException e) {
+            return Optional.empty();
         }
     }
 
-    public void insert(String username, String fullName, String picture, String password) throws SQLException {
+    @Override
+    public void insert(User u) throws SQLException {
         try (Connection conn = Database.connect()) {
             String insert = """
                     INSERT INTO users (username, full_name, picture, password)
@@ -53,12 +59,11 @@ public class UserDAO {
                     """;
 
             PreparedStatement st = conn.prepareStatement(insert);
-            String pass = Password.hash(password);
 
-            st.setString(1, username);
-            st.setString(2, fullName);
-            st.setString(3, picture);
-            st.setString(4, pass);
+            st.setString(1, u.getUsername());
+            st.setString(2, u.getFullName());
+            st.setString(3, u.getPicture());
+            st.setString(4, u.getPassword());
 
             int ignoredN = st.executeUpdate();
         }
