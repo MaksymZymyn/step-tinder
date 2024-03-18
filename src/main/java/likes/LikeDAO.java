@@ -13,7 +13,7 @@ public class LikeDAO implements DAO<Like> {
 
     @Override
     @SneakyThrows(SQLException.class)
-    public void save(Like like) {
+    public void insert(Like like) {
 
         try (Connection connection = Database.connect()) {
              String sql = "INSERT INTO likes(user_from, user_to, value) " +
@@ -46,9 +46,8 @@ public class LikeDAO implements DAO<Like> {
         return Optional.empty();
     }
 
-    @Override
     @SneakyThrows(SQLException.class)
-    public List<Like> getBy(Predicate<Like> predicate) {
+    public List<Like> get(Predicate<Like> predicate) {
         List<Like> filteredLikes = new ArrayList<>();
         List<Like> allLikes = new ArrayList<>();
 
@@ -73,17 +72,5 @@ public class LikeDAO implements DAO<Like> {
         }
 
         return filteredLikes;
-    }
-
-    @Override
-    @SneakyThrows(SQLException.class)
-    public void delete(UUID id) {
-
-        try (Connection connection = Database.connect()) {
-             String sql = "DELETE FROM likes WHERE user_from = ?";
-             PreparedStatement statement = connection.prepareStatement(sql);
-             statement.setObject(1, id);
-             statement.execute();
-        }
     }
 }

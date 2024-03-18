@@ -1,5 +1,6 @@
 package users;
 
+import lombok.Getter;
 import utils.exceptions.InvalidUserDataException;
 import utils.misc.Password;
 
@@ -7,19 +8,32 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
+@Getter
 public class User {
     private final UUID id;
     private final String username;
     private final String fullName;
-    private String picture;
+    private final String picture;
     private final String password;
 
-    User(UUID id, String username, String fullName, String picture, String password) {
+    private User(UUID id, String username, String fullName, String picture, String password) {
         this.id = id;
         this.username = username;
         this.fullName = fullName;
         this.picture = picture;
         this.password = password;
+    }
+
+    private User(String username, String fullName, String picture, String password) {
+        this.id = null;
+        this.username = username;
+        this.fullName = fullName;
+        this.picture = picture;
+        this.password = password;
+    }
+
+    public static User make(String username, String fullName, String picture, String password) {
+        return new User(username, fullName, picture, Password.hash(password));
     }
 
     public static User fromRS(ResultSet rs) throws SQLException, InvalidUserDataException {
@@ -38,23 +52,4 @@ public class User {
         return Password.check(pw, password);
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String p) {
-        this.picture = p;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
 }
