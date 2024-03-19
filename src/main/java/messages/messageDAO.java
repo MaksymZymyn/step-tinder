@@ -1,6 +1,7 @@
 package messages;
 
 import database.Database;
+import utils.interfaces.DAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,11 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class CollectionMessageDao implements MessageDao {
+public class messageDAO implements DAO<Message> {
 
 
-    @Override
-    public List<Message> ReadMessageFromDialog(UUID fromUserId, UUID toUserId) {
+    public List<Message> get(UUID fromUserId, UUID toUserId) {
         List<Message> messages = new ArrayList<>();
         try (Connection con = Database.connect()){
             String sql = "SELECT * FROM messages WHERE (user_from=? AND user_to=?) OR ( user_from=? AND user_to=?)";
@@ -40,8 +40,7 @@ public class CollectionMessageDao implements MessageDao {
         }
     }
 
-    @Override
-    public boolean addMessage(Message message) {
+    public boolean insert(Message message) {
         try (Connection con = Database.connect()) {
             String sql = "INSERT INTO messages (id, user_from, user_to, content, time) values (?, ?, ?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(sql);
@@ -57,9 +56,7 @@ public class CollectionMessageDao implements MessageDao {
         }
     }
 
-
-    @Override
-    public boolean deleteMessage(UUID messageId) {
-        return false;
+    public List<Message> get(UUID id){
+        return new ArrayList<>();
     }
 }
