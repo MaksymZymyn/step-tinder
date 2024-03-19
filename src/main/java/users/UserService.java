@@ -3,6 +3,7 @@ package users;
 import utils.exceptions.UserNotFoundException;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
 public class UserService {
@@ -18,6 +19,10 @@ public class UserService {
 
     public User get(UUID id) throws SQLException, UserNotFoundException {
         return dao.get(id).orElseThrow(UserNotFoundException::new);
+    }
+
+    public List<User> getAllUsers() throws SQLException {
+        return dao.getAll();
     }
 
     public void insert(String username, String fullName, String picture, String password) throws SQLException {

@@ -50,6 +50,22 @@ public class UserDAO implements DAO<User> {
         }
     }
 
+    public List<User> getAll() throws SQLException {
+        List<User> users = new ArrayList<>();
+        try (Connection conn = Database.connect()) {
+            String selectAll = "SELECT id, username, full_name, picture, password FROM users";
+            try (PreparedStatement st = conn.prepareStatement(selectAll)) {
+                ResultSet rs = st.executeQuery();
+                while (rs.next()) {
+                    users.add(User.fromRS(rs));
+                }
+            }
+        } catch (InvalidUserDataException e) {
+            throw new RuntimeException("Invalid user data retrieved from the database", e);
+        }
+        return users;
+    }
+
     @Override
     public void insert(User u) throws SQLException {
         try (Connection conn = Database.connect()) {

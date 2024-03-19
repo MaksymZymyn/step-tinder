@@ -2,7 +2,7 @@ package servlets;
 
 import auth.Auth;
 import likes.*;
-import lombok.*;
+import lombok.Data;
 import users.*;
 import utils.FreemarkerService;
 import utils.exceptions.UserNotFoundException;
@@ -14,11 +14,9 @@ import java.util.*;
 
 @Data
 public class UserServlet extends HttpServlet {
-    UserService userService;
-    LikeService likeService;
-    FreemarkerService freemarker;
-    private static int counter;
-    public static ArrayList<User> users = new ArrayList<>();
+    private UserService userService;
+    private LikeService likeService;
+    private FreemarkerService freemarker;
 
     public UserServlet() throws IOException {
         this.userService = new UserService(new UserDAO());
@@ -33,29 +31,28 @@ public class UserServlet extends HttpServlet {
                         user -> {
                             HashMap<String, Object> data = new HashMap<>();
 
-                            counter = 0;
+                            int counter = 0;
 
-                            List<Like> unliked = likeService.getByChoice(false);
-                            unliked.forEach(like -> {
-                                try {
+                            List<Like> unliked;
+                            try {
+                                unliked = likeService.getByChoice(false);
+                                for (Like like : unliked) {
                                     User unlikedUser = userService.get(like.getUser_to());
-                                    users.add(unlikedUser);
-                                } catch (SQLException | UserNotFoundException e) {
-                                    throw new RuntimeException(e);
+                                    data.put("id", unlikedUser.getId());
+                                    data.put("username", unlikedUser.getUsername());
+                                    data.put("fullName", unlikedUser.getFullName());
+                                    data.put("picture", unlikedUser.getPicture());
+
+                                    try (PrintWriter w = resp.getWriter()) {
+                                        freemarker.render("like-page.ftl", data, w);
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                    counter++;
                                 }
-                            });
-
-                            data.put("id", users.get(counter).getId());
-                            data.put("username", users.get(counter).getUsername());
-                            data.put("fullName", users.get(counter).getFullName());
-                            data.put("picture", users.get(counter).getPicture());
-
-                            try (PrintWriter w = resp.getWriter()) {
-                                freemarker.render("like-page.ftl", data, w);
-                            } catch (IOException e) {
+                            } catch (SQLException | UserNotFoundException e) {
                                 throw new RuntimeException(e);
                             }
-                            counter++;
                         },
                         () -> {
                             try {
@@ -74,42 +71,21 @@ public class UserServlet extends HttpServlet {
                 .ifPresentOrElse(
                         user -> {
                             if (likedParam != null) {
-                                List<Like> liked = likeService.getByChoice(true);
-                                for (Like like : liked) {
-                                    try {
+                                List<Like> liked;
+                                try {
+                                    liked = likeService.getByChoice(true);
+                                    for (Like like : liked) {
                                         User likedUser = userService.get(like.getUser_to());
-                                        users.add(likedUser);
-
                                         if (!likeService.hasBeenLiked(likedUser.getId())) {
                                             likeService.insert(like);
                                         }
-                                    } catch (SQLException | UserNotFoundException e) {
-                                        throw new RuntimeException(e);
                                     }
-                                }
-                                if (counter == likeService.getByChoice(false).size()) {
-                                    try {
+                                    if (likeService.getByChoice(false).isEmpty()) {
                                         resp.sendRedirect("/liked");
-                                    } catch (IOException e) {
-                                        throw new RuntimeException(e);
                                     }
-                                    counter = 0;
-                                }
-                                HashMap<String, Object> data = new HashMap<>();
-
-                                counter = 0;
-
-                                data.put("id", users.get(counter).getId());
-                                data.put("username", users.get(counter).getUsername());
-                                data.put("fullName", users.get(counter).getFullName());
-                                data.put("picture", users.get(counter).getPicture());
-
-                                try (PrintWriter w = resp.getWriter()) {
-                                    freemarker.render("like-page.ftl", data, w);
-                                } catch (IOException e) {
+                                } catch (SQLException | UserNotFoundException | IOException e) {
                                     throw new RuntimeException(e);
                                 }
-                                counter++;
                             }
                         },
                         () -> {

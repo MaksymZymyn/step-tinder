@@ -1,9 +1,9 @@
 package servlets;
 
-import likes.*;
-import lombok.*;
-import users.*;
 import auth.Auth;
+import likes.*;
+import lombok.Data;
+import users.*;
 import utils.FreemarkerService;
 import utils.exceptions.UserNotFoundException;
 
@@ -12,13 +12,11 @@ import java.io.*;
 import java.sql.SQLException;
 import java.util.*;
 
-
 @Data
 public class LikeServlet extends HttpServlet {
-
-    UserService userService;
-    LikeService likeService;
-    FreemarkerService freemarker;
+    private UserService userService;
+    private LikeService likeService;
+    private FreemarkerService freemarker;
 
     public LikeServlet() throws IOException {
         this.userService = new UserService(new UserDAO());
@@ -73,18 +71,21 @@ public class LikeServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        ArrayList<User> users = getUsers();
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        List<User> users;
+        try {
+            users = userService.getAllUsers();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         HashMap<String, Object> usersForRender = new HashMap<>();
         usersForRender.put("users", users);
 
         try (PrintWriter w = resp.getWriter()) {
             freemarker.render("people-list.ftl", usersForRender, w);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-    }
-
-    private static ArrayList<User> getUsers() {
-        return UserServlet.users;
     }
 }
