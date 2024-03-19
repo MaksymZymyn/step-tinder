@@ -1,6 +1,7 @@
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import servlets.MessagesServlet;
 import servlets.LikeServlet;
 import servlets.StaticFileServlet;
 import utils.environment.HerokuEnv;
@@ -12,6 +13,7 @@ public class App {
         ServletContextHandler handler = new ServletContextHandler();
 
         handler.addServlet(new ServletHolder(new StaticFileServlet("static")), "/static/*");
+        handler.addServlet(new ServletHolder(new MessagesServlet()), "/messages/*");
         handler.addServlet(new ServletHolder(new LikeServlet()), "/likes");
 
         server.setHandler(handler);
