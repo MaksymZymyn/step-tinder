@@ -2,17 +2,15 @@ package users;
 
 import database.Database;
 import utils.exceptions.InvalidUserDataException;
-import utils.misc.Password;
+import utils.interfaces.DAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.Optional;
 import java.util.UUID;
 
-public class UserDAO {
+public class UserDAO implements DAO<User> {
 
-    public User get(String username) throws SQLException, InvalidUserDataException {
+    public Optional<User> get(String username) throws SQLException {
         try (Connection conn = Database.connect()) {
             String select = """
                     SELECT id, username, full_name, picture, password
@@ -26,11 +24,13 @@ public class UserDAO {
             ResultSet rs = st.executeQuery();
             rs.next();
 
-            return User.fromRS(rs);
+            return Optional.of(User.fromRS(rs));
+        } catch (InvalidUserDataException e) {
+            return Optional.empty();
         }
     }
 
-    public User get(UUID id) throws SQLException, InvalidUserDataException {
+    public Optional<User> get(UUID id) throws SQLException {
         try (Connection conn = Database.connect()) {
             String select = """
                     SELECT id, username, full_name, picture, password
@@ -44,30 +44,27 @@ public class UserDAO {
             ResultSet rs = st.executeQuery();
             rs.next();
 
-            return User.fromRS(rs);
+            return Optional.of(User.fromRS(rs));
+        } catch (InvalidUserDataException e) {
+            return Optional.empty();
         }
     }
 
-    public User insert(String username, String fullName, String picture, String password) throws SQLException {
+    public void insert(User u) throws SQLException {
         try (Connection conn = Database.connect()) {
             String insert = """
-                    INSERT INTO users (id, username, full_name, picture, password)
-                    values (?, ?, ?, ?, ?)
+                    INSERT INTO users (username, full_name, picture, password)
+                    values (?, ?, ?, ?)
                     """;
 
             PreparedStatement st = conn.prepareStatement(insert);
-            UUID uuid = UUID.randomUUID();
-            String pass = Password.hash(password);
 
-            st.setObject(1, uuid);
-            st.setString(2, username);
-            st.setString(3, fullName);
-            st.setString(4, picture);
-            st.setString(5, pass);
+            st.setString(1, u.getUsername());
+            st.setString(2, u.getFullName());
+            st.setString(3, u.getPicture());
+            st.setString(4, u.getPassword());
 
             int ignoredN = st.executeUpdate();
-
-            return new User(uuid, username, fullName, picture, pass);
         }
     }
 }
