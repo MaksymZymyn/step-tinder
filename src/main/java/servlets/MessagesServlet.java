@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class MessagesServlet extends HttpServlet {
-    messageDAO messageDao = new messageDAO();
+    MessageDAO messageDao = new MessageDAO();
     MessageService messageService = new MessageService(messageDao);
     UserDAO userDao = new UserDAO();
     UserService userService = new UserService(userDao);

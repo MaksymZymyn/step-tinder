@@ -3,8 +3,8 @@ package messages;
 import java.util.*;
 
 public class MessageService {
-    private messageDAO dao;
-    public MessageService(messageDAO dao) {
+    private MessageDAO dao;
+    public MessageService(MessageDAO dao) {
         this.dao = dao;
     }
     public List<Message> ReadMessageFromDialog(UUID fromUserId, UUID toUserId) {

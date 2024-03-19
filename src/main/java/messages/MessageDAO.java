@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class messageDAO implements DAO<Message> {
+public class MessageDAO implements DAO<Message> {
 
 
     public List<Message> get(UUID fromUserId, UUID toUserId) {
