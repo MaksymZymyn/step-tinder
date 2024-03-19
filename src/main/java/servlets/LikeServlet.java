@@ -14,9 +14,9 @@ import java.util.*;
 
 @Data
 public class LikeServlet extends HttpServlet {
-    private UserService userService;
-    private LikeService likeService;
-    private FreemarkerService freemarker;
+    UserService userService;
+    LikeService likeService;
+    FreemarkerService freemarker;
 
     public LikeServlet() throws IOException {
         this.userService = new UserService(new UserDAO());
