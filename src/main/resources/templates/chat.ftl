@@ -21,10 +21,14 @@
     <div class="row">
         <div class="chat-main col-6 offset-3">
             <div class="col-md-12 chat-header">
+                <div class="navigate-cont">
+                    <a class="btn btn-lg btn-light" href="/user">UsersForLike</a>
+                    <a class="btn btn-lg btn-light" style="float: right" href="/liked">Liked</a>
+                </div>
                 <div class="row header-one text-white p-1">
                     <div class="col-md-6 name pl-2">
                         <i class="fa fa-comment"></i>
-                        <h6 class="ml-1 mb-0">Ketty Peris</h6>
+                        <h6 class="ml-1 mb-0">${chatWithUser.fullName}</h6>
                     </div>
                     <div class="col-md-6 options text-right pr-0">
                         <i class="fa fa-window-minimize hide-chat-box hover text-center pt-1"></i>
@@ -47,72 +51,28 @@
             <div class="chat-content">
                 <div class="col-md-12 chats pt-3 pl-2 pr-3 pb-3">
                     <ul class="p-0">
-                        <li class="send-msg float-right mb-2">
-                            <p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">
-                                Hii
-                            </p>
-                        </li>
-                        <li class="receive-msg float-left mb-2">
-                            <div class="sender-img">
-                                <img src="http://nicesnippets.com/demo/image1.jpg" class="float-left">
-                            </div>
-                            <div class="receive-msg-desc float-left ml-2">
-                                <p class="bg-white m-0 pt-1 pb-1 pl-2 pr-2 rounded">
-                                    hiii <br>
-                                    How are you ?<br>
-                                </p>
-                                <span class="receive-msg-time">ketty, Jan 25, 6:20 PM</span>
-                            </div>
-                        </li>
-                        <li class="send-msg float-right mb-2">
-                            <p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">
-                                nice <br>
-                                Are you fine ?
-                            </p>
-                        </li>
-                        <li class="receive-msg float-left mb-2">
-                            <div class="sender-img">
-                                <img src="http://nicesnippets.com/demo/image1.jpg" class="float-left">
-                            </div>
-                            <div class="receive-msg-desc float-left ml-2">
-                                <p class="bg-white m-0 pt-1 pb-1 pl-2 pr-2 rounded">
-                                    Yes always
-                                </p>
-                            </div>
-                        </li>
-                        <li class="send-msg float-right mb-2">
-                            <p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">
-                                <a href="https://nicesnippets.com/" class="text-dark rounded" target="_blank"><u>https://nicesnippets.com/</u></a>
-                            </p>
-                        </li>
-                        <li class="send-msg float-right mb-2">
-                            <p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">
-                                Byy
-                            </p>
-                            <span class="send-msg-time">1 min</span>
-                        </li>
-                        <li class="send-msg float-right mb-2">
-                            <p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">
-                                <a href="https://nicesnippets.com/" class="text-dark rounded" target="_blank"><u>https://nicesnippets.com/</u></a>
-                            </p>
-                        </li>
-                        <li class="send-msg float-right mb-2">
-                            <p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">
-                                Byy
-                            </p>
-                            <span class="send-msg-time">1 min</span>
-                        </li>
-                        <li class="send-msg float-right mb-2">
-                            <p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">
-                                <a href="https://nicesnippets.com/" class="text-dark rounded" target="_blank"><u>https://nicesnippets.com/</u></a>
-                            </p>
-                        </li>
-                        <li class="send-msg float-right mb-2">
-                            <p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">
-                                Byy
-                            </p>
-                            <span class="send-msg-time">1 min</span>
-                        </li>
+                        <#list messages as message>
+                            <#if message.toUserId == chatWithUser.id>
+                                <li class="send-msg float-right mb-2">
+                                    <p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">
+                                        ${message.messageText}
+                                    </p>
+                                    <span class="receive-msg-time">${message.formatUnixTimestamp(message.getTime())}</span>
+                                </li>
+                            <#else>
+                                <li class="receive-msg float-left mb-2">
+                                    <div class="sender-img">
+                                        <img src="${chatWithUser.picture}" class="float-left">
+                                    </div>
+                                    <div class="receive-msg-desc float-left ml-2">
+                                        <p class="bg-white m-0 pt-1 pb-1 pl-2 pr-2 rounded">
+                                            ${message.messageText}
+                                        </p>
+                                        <span class="receive-msg-time">${chatWithUser.username}, ${message.formatUnixTimestamp(message.getTime())}</span>
+                                    </div>
+                                </li>
+                            </#if>
+                        </#list>
                     </ul>
                 </div>
                 <div class="col-md-12 p-2 msg-box border border-primary">
@@ -120,9 +80,9 @@
                         <div class="col-md-2 options-left">
                             <i class="fa fa-smile-o"></i>
                         </div>
-                        <div class="col-md-7 pl-0">
-                            <input type="text" class="border-0" placeholder=" Send message" />
-                        </div>
+                        <form class="col-md-7 pl-0" method="post">
+                            <input name="messageText" type="text" class="border-0" placeholder=" Send message" />
+                        </form>
                         <div class="col-md-3 text-right options-right">
                             <i class="fa fa-picture-o mr-2"></i>
                         </div>
@@ -132,6 +92,49 @@
         </div>
     </div>
 </div>
+<script>
+    document.getElementById("messageInput").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault(); // Заборонити перезавантаження сторінки
+            sendMessage(); // Відправка повідомлення
+        }
+    });
+
+    function sendMessage() {
+        var messageText = document.getElementById("messageInput").value;
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/messages", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    // Оновити чат після успішної відправки повідомлення
+                    updateChat();
+                } else {
+                    console.error("Помилка при відправленні повідомлення");
+                }
+            }
+        };
+        xhr.send(JSON.stringify({ "messageText": messageText }));
+    }
+
+    function updateChat() {
+        // Здійсніть запит GET на сервер для отримання оновленого чату і оновіть його на сторінці
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    document.getElementById("chat").innerHTML = xhr.responseText; // Оновити чат на сторінці
+                } else {
+                    console.error("Помилка при оновленні чату");
+                }
+            }
+        };
+        xhr.open("GET", "/messages", true);
+        xhr.send();
+    }
+
+</script>
 
 </body>
 </html>
