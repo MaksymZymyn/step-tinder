@@ -9,7 +9,7 @@ import java.util.EnumSet;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        DatabaseSetup.migrate(HerokuEnv.jdbc_url(), HerokuEnv.jdbc_username(), HerokuEnv.jdbc_password());
+        // DatabaseSetup.migrate(HerokuEnv.jdbc_url(), HerokuEnv.jdbc_username(), HerokuEnv.jdbc_password());
 
         Server server = new Server(HerokuEnv.port());
 
@@ -17,6 +17,7 @@ public class App {
 
         handler.addServlet(new ServletHolder(new StaticFileServlet("static")), "/static/*");
         handler.addServlet(new ServletHolder(new UserServlet()), "/users");
+        handler.addServlet(new ServletHolder(new MessagesServlet()), "/messages/*");
         handler.addServlet(new ServletHolder(new LikeServlet()), "/liked");
         handler.addFilter(AuthFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
         handler.addServlet(new ServletHolder(new LoginServlet()), "/login");
