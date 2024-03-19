@@ -16,7 +16,6 @@ public class App {
         ServletContextHandler handler = new ServletContextHandler();
 
         handler.addServlet(new ServletHolder(new StaticFileServlet("static")), "/static/*");
-        handler.addServlet(new ServletHolder(new StaticFileServlet("static")), "/css/*");
         handler.addServlet(new ServletHolder(new UserServlet()), "/users");
         handler.addServlet(new ServletHolder(new LikeServlet()), "/liked");
         handler.addFilter(AuthFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));

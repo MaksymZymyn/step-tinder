@@ -74,9 +74,17 @@ public class LikeServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        HashMap<String, Object> data = new HashMap<>();
+        ArrayList<User> users = getUsers();
+
+        HashMap<String, Object> usersForRender = new HashMap<>();
+        usersForRender.put("users", users);
+
         try (PrintWriter w = resp.getWriter()) {
-            freemarker.render("people-list.ftl", data, w);
+            freemarker.render("people-list.ftl", usersForRender, w);
         }
+    }
+
+    private static ArrayList<User> getUsers() {
+        return UserServlet.users;
     }
 }

@@ -18,6 +18,7 @@ public class UserServlet extends HttpServlet {
     LikeService likeService;
     FreemarkerService freemarker;
     private static int counter;
+    public static ArrayList<User> users = new ArrayList<>();
 
     public UserServlet() throws IOException {
         this.userService = new UserService(new UserDAO());
@@ -35,7 +36,6 @@ public class UserServlet extends HttpServlet {
                             counter = 0;
 
                             List<Like> unliked = likeService.getByChoice(false);
-                            List<User> users = new ArrayList<>();
                             unliked.forEach(like -> {
                                 try {
                                     User unlikedUser = userService.get(like.getUser_to());
@@ -75,7 +75,6 @@ public class UserServlet extends HttpServlet {
                         user -> {
                             if (likedParam != null) {
                                 List<Like> liked = likeService.getByChoice(true);
-                                List<User> users = new ArrayList<>();
                                 for (Like like : liked) {
                                     try {
                                         User likedUser = userService.get(like.getUser_to());
