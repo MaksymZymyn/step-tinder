@@ -1,12 +1,12 @@
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
                        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                        username TEXT NOT NULL UNIQUE,
                        full_name TEXT NOT NULL,
-                       picture TEXT,
-                       password VARCHAR(255) NOT NULL
+                       picture TEXT NOT NULL,
+                       password TEXT NOT NULL
 );
 
-CREATE TABLE likes (
+CREATE TABLE IF NOT EXISTS likes (
                        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                        user_from UUID NOT NULL,
                        user_to UUID NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE likes (
                        CONSTRAINT user_likes_users_to_fk FOREIGN KEY (user_to) REFERENCES users (id) ON DELETE CASCADE
 );
 
-CREATE TABLE messages (
+CREATE TABLE IF NOT EXISTS messages (
                           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                           user_from UUID NOT NULL,
                           user_to UUID NOT NULL,
