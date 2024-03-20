@@ -21,7 +21,15 @@ public class Message {
     private String messageText;
     private long time;
 
-    public Message(UUID fromUserId, UUID toUserId, String messageText) {
+    public Message(UUID messageId, UUID fromUserId, UUID toUserId, String messageText, long time) {
+        this.messageId = messageId;
+        this.fromUserId = fromUserId;
+        this.toUserId = toUserId;
+        this.messageText = messageText;
+        this.time = time;
+    }
+
+  public Message(UUID fromUserId, UUID toUserId, String messageText) {
         this.messageId = UUID.randomUUID();
         this.fromUserId = fromUserId;
         this.toUserId = toUserId;

@@ -8,6 +8,10 @@ import java.util.*;
 public class LikeService {
     LikeDAO likeDAO;
 
+    public LikeService(LikeDAO likeDAO) {
+        this.likeDAO = likeDAO;
+    }
+  
     public void insert(Like like) {
         likeDAO.insert(like);
     }
