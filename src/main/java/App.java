@@ -23,6 +23,7 @@ public class App {
         handler.addServlet(new ServletHolder(new UserServlet()), "/liked");
         handler.addFilter(AuthFilter.class, "/liked", EnumSet.of(DispatcherType.REQUEST));
         handler.addServlet(new ServletHolder(new LoginServlet()), "/login");
+        handler.addServlet(new ServletHolder(new RegisterServlet()), "/register");
 
         server.setHandler(handler);
 
