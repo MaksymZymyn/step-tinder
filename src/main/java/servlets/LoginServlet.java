@@ -24,47 +24,45 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-        Auth.getCookieValue(req)
-                .ifPresentOrElse(
-                        user -> {
-                            HashMap<String, Object> data = new HashMap<>();
-                            try (PrintWriter w = resp.getWriter()) {
-                                freemarker.render("login.ftl", data, w);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        },
-                        () -> {
-                            try {
-                                Auth.renderUnregistered(resp);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                );
+        Auth.getCookieValue(req).ifPresentOrElse(
+                cookieValue -> {
+                    try {
+                        resp.sendRedirect("/users");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                },
+                () -> {
+                    try {
+                        HashMap<String, Object> data = new HashMap<>();
+                        freemarker.render("login.ftl", data, resp.getWriter());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+        );
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String logout = req.getParameter("logout");
-        String username = req.getParameter("username");
+        String username = req.getParameter("login");
+        String password = req.getParameter("password");
 
-        if (logout != null) {
-            Auth.clearCookie(resp);
-            resp.sendRedirect("/login");
-        } else {
-            try {
-                if (userService.get(username) != null) {
-                    Cookie cookie = new Cookie("id",
-                            userService.get(username).getId().toString());
-                    resp.addCookie(cookie);
-                    resp.sendRedirect("/users");
-                } else {
-                    resp.sendRedirect("/login");
-                }
-            } catch (SQLException | UserNotFoundException e) {
-                throw new RuntimeException(e);
+        try {
+            User user = userService.get(username);
+
+            if (user.checkPassword(password)) {
+                Auth.setCookieValue(user.getId().toString(), resp);
+                resp.sendRedirect("/users");
+            } else {
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("error", "Invalid username or password.");
+                freemarker.render("login.ftl", data, resp.getWriter());
             }
+        } catch (SQLException | UserNotFoundException e) {
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("error", "Invalid username or password.");
+            freemarker.render("login.ftl", data, resp.getWriter());
         }
     }
 }

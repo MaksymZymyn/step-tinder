@@ -28,29 +28,24 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         Auth.getCookieValue(req)
                 .ifPresentOrElse(
-                        user -> {
+                        userUUID -> {
+                            User currentUser;
+                            try {
+                                currentUser = userService.get(UUID.fromString(userUUID));
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                            } catch (UserNotFoundException e) {
+                                throw new RuntimeException(e);
+                            }
+
                             HashMap<String, Object> data = new HashMap<>();
 
-                            int counter = 0;
-
-                            List<Like> unliked;
-                            try {
-                                unliked = likeService.getByChoice(false);
-                                for (Like like : unliked) {
-                                    User unlikedUser = userService.get(like.getUser_to());
-                                    data.put("id", unlikedUser.getId());
-                                    data.put("username", unlikedUser.getUsername());
-                                    data.put("fullName", unlikedUser.getFullName());
-                                    data.put("picture", unlikedUser.getPicture());
-
-                                    try (PrintWriter w = resp.getWriter()) {
-                                        freemarker.render("like-page.ftl", data, w);
-                                    } catch (IOException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                    counter++;
-                                }
-                            } catch (SQLException | UserNotFoundException e) {
+                            data.put("user_name", currentUser.getUsername());
+                            data.put("full_name", currentUser.getFullName());
+                            data.put("picture", currentUser.getPicture());
+                            try (PrintWriter w = resp.getWriter()) {
+                                freemarker.render("people-list.ftl", data, w);
+                            } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
                         },
@@ -66,26 +61,17 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        String likedParam = req.getParameter("liked");
         Auth.getCookieValue(req)
                 .ifPresentOrElse(
                         user -> {
-                            if (likedParam != null) {
-                                List<Like> liked;
-                                try {
-                                    liked = likeService.getByChoice(true);
-                                    for (Like like : liked) {
-                                        User likedUser = userService.get(like.getUser_to());
-                                        if (!likeService.hasBeenLiked(likedUser.getId())) {
-                                            likeService.insert(like);
-                                        }
-                                    }
-                                    if (likeService.getByChoice(false).isEmpty()) {
-                                        resp.sendRedirect("/liked");
-                                    }
-                                } catch (SQLException | UserNotFoundException | IOException e) {
-                                    throw new RuntimeException(e);
-                                }
+                            String username = req.getParameter("username");
+                            String fullName = req.getParameter("fullName");
+                            String picture = req.getParameter("picture");
+                            String password = req.getParameter("password");
+                            try {
+                                userService.insert(username, fullName, picture, password);
+                            } catch (SQLException e) {
+                                throw new RuntimeException(e);
                             }
                         },
                         () -> {

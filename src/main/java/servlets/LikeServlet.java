@@ -28,35 +28,21 @@ public class LikeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         Auth.getCookieValue(req)
                 .ifPresentOrElse(
-                        user -> {
-                            User currentUser;
+                        currentUser -> {
+                            String userIdParam = req.getParameter("id");
                             try {
-                                currentUser = Auth.getCurrentUser(userService, req).orElseThrow(RuntimeException::new);
-                            } catch (SQLException e) {
-                                throw new RuntimeException(e);
-                            }
+                                UUID userId = UUID.fromString(userIdParam);
 
-                            HashMap<String, Object> data = new HashMap<>();
+                                User user = userService.get(userId);
 
-                            Optional<Like> currentUserLike = likeService.get(currentUser.getId());
-                            currentUserLike.ifPresentOrElse(
-                                    like -> {
-                                        UUID likedUserId = like.getUser_to();
-                                        User likedUser;
-                                        try {
-                                            likedUser = userService.get(likedUserId);
-                                        } catch (SQLException | UserNotFoundException e) {
-                                            throw new RuntimeException(e);
-                                        }
-                                        data.put("liked", Collections.singletonList(likedUser));
-                                    },
-                                    () -> data.put("liked", Collections.emptyList())
-                            );
+                                boolean hasLiked = likeService.hasBeenLiked(userId);
 
-                            data.put("full_name", currentUser.getFullName());
-                            try (PrintWriter w = resp.getWriter()) {
-                                freemarker.render("people-list.ftl", data, w);
-                            } catch (IOException e) {
+                                HashMap<String, Object> data = new HashMap<>();
+                                data.put("user", user);
+                                data.put("hasLiked", hasLiked);
+
+                                freemarker.render("like-page.ftl", data, resp.getWriter());
+                            } catch (SQLException | IOException | UserNotFoundException e) {
                                 throw new RuntimeException(e);
                             }
                         },
@@ -72,20 +58,47 @@ public class LikeServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        List<User> users;
-        try {
-            users = userService.getAllUsers();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        Auth.getCookieValue(req)
+                .ifPresentOrElse(
+                        currentUser -> {
+                            String userIdParam = req.getParameter("id");
+                            try {
+                                UUID userId = UUID.fromString(userIdParam);
+                                String action = req.getParameter("action");
 
-        HashMap<String, Object> usersForRender = new HashMap<>();
-        usersForRender.put("users", users);
+                                if (action == null || action.isEmpty()) {
+                                    resp.getWriter().write("Error: Missing action parameter");
+                                    return;
+                                }
 
-        try (PrintWriter w = resp.getWriter()) {
-            freemarker.render("people-list.ftl", usersForRender, w);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+                                switch (action) {
+                                    case "like":
+                                        likeService.insert(new Like(UUID.randomUUID(), getCurrentUserId(req), userId, true));
+                                        break;
+                                    case "dislike":
+                                        likeService.insert(new Like(UUID.randomUUID(), getCurrentUserId(req), userId, false));
+                                        break;
+                                    default:
+                                        resp.getWriter().write("Error: Invalid action parameter");
+                                        return;
+                                }
+
+                                resp.sendRedirect("/liked?id=" + userIdParam);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        },
+                        () -> {
+                            try {
+                                Auth.renderUnregistered(resp);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                );
+    }
+
+    private UUID getCurrentUserId(HttpServletRequest req) {
+        return UUID.fromString(Auth.getCookieValueForced(req));
     }
 }

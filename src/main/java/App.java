@@ -1,5 +1,5 @@
-import database.DatabaseSetup;
 import filters.AuthFilter;
+import servlets.UserServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.*;
 import servlets.*;
@@ -16,9 +16,9 @@ public class App {
         ServletContextHandler handler = new ServletContextHandler();
 
         handler.addServlet(new ServletHolder(new StaticFileServlet("static")), "/static/*");
-        handler.addServlet(new ServletHolder(new UserServlet()), "/users");
+        handler.addServlet(new ServletHolder(new LikeServlet()), "/users");
         handler.addServlet(new ServletHolder(new MessagesServlet()), "/messages/*");
-        handler.addServlet(new ServletHolder(new LikeServlet()), "/liked");
+        handler.addServlet(new ServletHolder(new UserServlet()), "/liked");
         handler.addFilter(AuthFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
         handler.addServlet(new ServletHolder(new LoginServlet()), "/login");
 
