@@ -14,12 +14,15 @@ public class App {
         Server server = new Server(HerokuEnv.port());
 
         ServletContextHandler handler = new ServletContextHandler();
+        var sfd = EnumSet.of(DispatcherType.REQUEST);
 
         handler.addServlet(new ServletHolder(new StaticFileServlet("static")), "/static/*");
-        handler.addServlet(new ServletHolder(new LikeServlet()), "/users");
+        handler.addFilter(AuthFilter.class, "/liked", sfd);
+        handler.addServlet(new ServletHolder(new LikeServlet()), "/liked");
+        handler.addFilter(AuthFilter.class, "/messages/*", sfd);
         handler.addServlet(new ServletHolder(new MessagesServlet()), "/messages/*");
-        handler.addServlet(new ServletHolder(new UserServlet()), "/liked");
-        handler.addFilter(AuthFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
+        handler.addFilter(AuthFilter.class, "/users", sfd);
+        handler.addServlet(new ServletHolder(new UserServlet()), "/users");
         handler.addServlet(new ServletHolder(new LoginServlet()), "/login");
 
         server.setHandler(handler);

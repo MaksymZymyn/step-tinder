@@ -32,9 +32,7 @@ public class UserServlet extends HttpServlet {
                             User currentUser;
                             try {
                                 currentUser = userService.get(UUID.fromString(userUUID));
-                            } catch (SQLException e) {
-                                throw new RuntimeException(e);
-                            } catch (UserNotFoundException e) {
+                            } catch (SQLException | UserNotFoundException e) {
                                 throw new RuntimeException(e);
                             }
 
