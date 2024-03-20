@@ -5,6 +5,7 @@ import likes.*;
 import lombok.Data;
 import users.*;
 import utils.FreemarkerService;
+import utils.exceptions.RegistrationException;
 import utils.exceptions.UserNotFoundException;
 
 import javax.servlet.http.*;
@@ -32,9 +33,7 @@ public class UserServlet extends HttpServlet {
                             User currentUser;
                             try {
                                 currentUser = userService.get(UUID.fromString(userUUID));
-                            } catch (SQLException e) {
-                                throw new RuntimeException(e);
-                            } catch (UserNotFoundException e) {
+                            } catch (SQLException | UserNotFoundException e) {
                                 throw new RuntimeException(e);
                             }
 
@@ -70,7 +69,7 @@ public class UserServlet extends HttpServlet {
                             String password = req.getParameter("password");
                             try {
                                 userService.insert(username, fullName, picture, password);
-                            } catch (SQLException e) {
+                            } catch (SQLException | RegistrationException e) {
                                 throw new RuntimeException(e);
                             }
                         },

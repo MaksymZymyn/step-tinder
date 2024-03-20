@@ -21,20 +21,8 @@ public class Message {
     private String messageText;
     private long time;
 
-    public Message(UUID messageId, UUID fromUserId, UUID toUserId, String messageText, long time) {
-        this.messageId = messageId;
-        this.fromUserId = fromUserId;
-        this.toUserId = toUserId;
-        this.messageText = messageText;
-        this.time = time;
-    }
-
-  public Message(UUID fromUserId, UUID toUserId, String messageText) {
-        this.messageId = UUID.randomUUID();
-        this.fromUserId = fromUserId;
-        this.toUserId = toUserId;
-        this.messageText = messageText;
-        this.time = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli();;
+    public Message(UUID fromUserId, UUID toUserId, String messageText) {
+        this(null, fromUserId, toUserId, messageText, LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli());
     }
 
     public static Message fromRS(ResultSet rs) throws SQLException, InvalidMessageDataException {
@@ -44,7 +32,8 @@ public class Message {
         String messageText = rs.getString("messageText");
         Long time = rs.getLong("time");
 
-        if (messageId == null || fromUserId == null || toUserId == null || messageText == null || time == null) throw new InvalidMessageDataException();
+        if (messageId == null || fromUserId == null || toUserId == null || messageText == null || time == null)
+            throw new InvalidMessageDataException();
 
         return new Message(messageId, fromUserId, toUserId, messageText, time);
     }
@@ -54,16 +43,5 @@ public class Message {
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, HH:mm", Locale.ENGLISH);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         return sdf.format(date);
-    }
-
-    @Override
-    public String toString() {
-        return "Message{" +
-                "messageId=" + messageId +
-                ", fromUserId=" + fromUserId +
-                ", toUserId=" + toUserId +
-                ", messageText='" + messageText + '\'' +
-                ", time=" + time +
-                '}';
     }
 }
