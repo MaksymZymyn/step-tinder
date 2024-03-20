@@ -1,5 +1,6 @@
 package database;
 
+import lombok.SneakyThrows;
 import utils.environment.HerokuEnv;
 
 import java.sql.Connection;

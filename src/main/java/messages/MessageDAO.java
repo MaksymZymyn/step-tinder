@@ -1,15 +1,10 @@
 package messages;
 
 import database.Database;
+import utils.exceptions.InvalidMessageDataException;
 import utils.interfaces.DAO;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.sql.*;
+import java.util.*;
 
 public class MessageDAO implements DAO<Message> {
 
@@ -40,7 +35,7 @@ public class MessageDAO implements DAO<Message> {
         }
     }
 
-    public boolean insert(Message message) {
+    public void insert(Message message) throws SQLException {
         try (Connection con = Database.connect()) {
             String sql = "INSERT INTO messages (id, user_from, user_to, content, time) values (?, ?, ?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(sql);
@@ -50,13 +45,27 @@ public class MessageDAO implements DAO<Message> {
             ps.setObject(4, message.getMessageText());
             ps.setObject(5, message.getTime());
             ps.execute();
-            return true;
-        } catch (Exception ex) {
-            return false;
         }
     }
 
-    public List<Message> get(UUID id){
-        return new ArrayList<>();
+    @Override
+    public Optional<Message> get(UUID id) throws SQLException {
+        try (Connection conn = Database.connect()) {
+            String select = """
+                    SELECT  messageId, fromUserId, toUserId, messageText, time
+                    FROM messages
+                    WHERE messageId=?
+                    """;
+
+            PreparedStatement st = conn.prepareStatement(select);
+            st.setObject(1, id);
+
+            ResultSet rs = st.executeQuery();
+            rs.next();
+
+            return Optional.of(Message.fromRS(rs));
+        } catch (InvalidMessageDataException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

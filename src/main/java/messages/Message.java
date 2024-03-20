@@ -1,13 +1,19 @@
 package messages;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.UUID;
+import lombok.*;
+import users.User;
+import utils.exceptions.InvalidMessageDataException;
+import utils.exceptions.InvalidUserDataException;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.*;
+import java.util.*;
+
+@AllArgsConstructor
+@Getter
+@Setter
 public class Message {
     private UUID messageId;
     private UUID fromUserId;
@@ -22,7 +28,8 @@ public class Message {
         this.messageText = messageText;
         this.time = time;
     }
-    public Message(UUID fromUserId, UUID toUserId, String messageText) {
+
+  public Message(UUID fromUserId, UUID toUserId, String messageText) {
         this.messageId = UUID.randomUUID();
         this.fromUserId = fromUserId;
         this.toUserId = toUserId;
@@ -30,55 +37,24 @@ public class Message {
         this.time = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli();;
     }
 
+    public static Message fromRS(ResultSet rs) throws SQLException, InvalidMessageDataException {
+        UUID messageId = rs.getObject("messageId", UUID.class);
+        UUID fromUserId = rs.getObject("fromUserId", UUID.class);
+        UUID toUserId = rs.getObject("toUserId", UUID.class);
+        String messageText = rs.getString("messageText");
+        Long time = rs.getLong("time");
 
-    public UUID getMessageId() {
-        return messageId;
+        if (messageId == null || fromUserId == null || toUserId == null || messageText == null || time == null) throw new InvalidMessageDataException();
+
+        return new Message(messageId, fromUserId, toUserId, messageText, time);
     }
 
-    public void setMessageId(UUID messageId) {
-        this.messageId = messageId;
-    }
-
-    public UUID getFromUserId() {
-        return fromUserId;
-    }
-
-    public void setFromUserId(UUID fromUserId) {
-        this.fromUserId = fromUserId;
-    }
-
-    public UUID getToUserId() {
-        return toUserId;
-    }
-
-    public void setToUserId(UUID toUserId) {
-        this.toUserId = toUserId;
-    }
-
-    public String getMessageText() {
-        return messageText;
-    }
-
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
-    }
-
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
-    }
-
-
-    public String formatUnixTimestamp(long timestamp) {
+    public static String formatUnixTimestamp(long timestamp) {
         Date date = new Date(timestamp);
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, HH:mm", Locale.ENGLISH);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         return sdf.format(date);
     }
-
 
     @Override
     public String toString() {
