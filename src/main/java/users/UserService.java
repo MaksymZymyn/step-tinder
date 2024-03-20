@@ -1,6 +1,6 @@
 package users;
 
-import utils.exceptions.UserNotFoundException;
+import utils.exceptions.*;
 
 import java.sql.SQLException;
 import java.util.UUID;
@@ -20,7 +20,8 @@ public class UserService {
         return dao.get(id).orElseThrow(UserNotFoundException::new);
     }
 
-    public void insert(String username, String fullName, String picture, String password) throws SQLException {
+    public User insert(String username, String fullName, String picture, String password) throws SQLException, RegistrationException {
         dao.insert(User.make(username, fullName, picture, password));
+        return dao.get(username).orElseThrow(RegistrationException::new);
     }
 }

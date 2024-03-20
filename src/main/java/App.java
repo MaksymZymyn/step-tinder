@@ -24,6 +24,7 @@ public class App {
         handler.addFilter(AuthFilter.class, "/users", sfd);
         handler.addServlet(new ServletHolder(new UserServlet()), "/users");
         handler.addServlet(new ServletHolder(new LoginServlet()), "/login");
+        handler.addServlet(new ServletHolder(new RegisterServlet()), "/register");
 
         server.setHandler(handler);
 
