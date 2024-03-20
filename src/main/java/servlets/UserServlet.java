@@ -42,6 +42,7 @@ public class UserServlet extends HttpServlet {
                             data.put("full_name", currentUser.getFullName());
                             data.put("picture", currentUser.getPicture());
                             try (PrintWriter w = resp.getWriter()) {
+                                Auth.setCookieValue(userUUID, resp);
                                 freemarker.render("people-list.ftl", data, w);
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
@@ -67,6 +68,7 @@ public class UserServlet extends HttpServlet {
                             String picture = req.getParameter("picture");
                             String password = req.getParameter("password");
                             try {
+                                Auth.setCookieValue(user, resp);
                                 userService.insert(username, fullName, picture, password);
                             } catch (SQLException | RegistrationException e ) {
                                 throw new RuntimeException(e);

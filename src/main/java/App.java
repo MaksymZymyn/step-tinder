@@ -17,12 +17,12 @@ public class App {
         var sfd = EnumSet.of(DispatcherType.REQUEST);
 
         handler.addServlet(new ServletHolder(new StaticFileServlet("templates")), "/static/*");
-        handler.addFilter(AuthFilter.class, "/liked", sfd);
-        handler.addServlet(new ServletHolder(new LikeServlet()), "/liked");
+        handler.addFilter(AuthFilter.class, "/users", sfd);
+        handler.addServlet(new ServletHolder(new LikeServlet()), "/users");
         handler.addFilter(AuthFilter.class, "/messages/*", sfd);
         handler.addServlet(new ServletHolder(new MessagesServlet()), "/messages/*");
-        handler.addFilter(AuthFilter.class, "/users", sfd);
-        handler.addServlet(new ServletHolder(new UserServlet()), "/users");
+        handler.addFilter(AuthFilter.class, "/liked", sfd);
+        handler.addServlet(new ServletHolder(new UserServlet()), "/liked");
         handler.addServlet(new ServletHolder(new LoginServlet()), "/login");
         handler.addServlet(new ServletHolder(new RegisterServlet()), "/register");
 

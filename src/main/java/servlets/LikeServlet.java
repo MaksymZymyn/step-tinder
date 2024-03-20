@@ -38,7 +38,7 @@ public class LikeServlet extends HttpServlet {
                                     data.put("username", users.get(i).getUsername());
                                     data.put("id", users.get(i).getId());
                                 }
-
+                                Auth.setCookieValue(cookieValue, resp);
                                 freemarker.render("like-page.ftl", data, resp.getWriter());
                             } catch (IOException | SQLException e) {
                                 throw new RuntimeException(e);
@@ -71,9 +71,11 @@ public class LikeServlet extends HttpServlet {
 
                                 switch (action) {
                                     case "like":
+                                        Auth.setCookieValue(userIdParam, resp);
                                         likeService.insert(new Like(UUID.randomUUID(), UUID.fromString(currentUser), userId, true));
                                         break;
                                     case "dislike":
+                                        Auth.setCookieValue(userIdParam, resp);
                                         likeService.insert(new Like(UUID.randomUUID(), UUID.fromString(currentUser), userId, false));
                                         break;
                                     default:
@@ -93,7 +95,7 @@ public class LikeServlet extends HttpServlet {
                                 if (currentIndex != -1 && currentIndex < users.size() - 1) {
                                     User nextUser = users.get(currentIndex + 1);
                                     req.setAttribute("user", nextUser);
-                                    req.getRequestDispatcher("/WEB-INF/user-profile.jsp").forward(req, resp);
+                                    req.getRequestDispatcher("like-page.ftl").forward(req, resp);
                                 } else {
                                     resp.getWriter().write("No more users to display.");
                                 }

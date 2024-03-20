@@ -24,7 +24,7 @@ public class RegisterServlet extends HttpServlet {
         Auth.getCookieValue(req).ifPresentOrElse(
                 cookieValue -> {
                     try {
-                        resp.sendRedirect("/liked");
+                        resp.sendRedirect("/users");
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -57,7 +57,7 @@ public class RegisterServlet extends HttpServlet {
             User user = userService.insert(username, fullName, picture, password);
 
             Auth.setCookieValue(user.getId().toString(), resp);
-            resp.sendRedirect("/liked");
+            resp.sendRedirect("/users");
         } catch (SQLException | RegistrationException e) {
             HashMap<String, Object> data = new HashMap<>();
             data.put("error", "Registration failed. User with such username might already exist");
