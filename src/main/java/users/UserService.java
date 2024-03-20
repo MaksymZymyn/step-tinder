@@ -1,6 +1,5 @@
 package users;
 
-import utils.exceptions.InvalidUserDataException;
 import utils.exceptions.UserNotFoundException;
 
 import java.sql.SQLException;

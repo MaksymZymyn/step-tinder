@@ -1,6 +1,6 @@
 package users;
 
-import lombok.Getter;
+import lombok.*;
 import utils.exceptions.InvalidUserDataException;
 import utils.misc.Password;
 
@@ -8,21 +8,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-@Getter
+@AllArgsConstructor
+@Data
 public class User {
-    private final UUID id;
-    private final String username;
-    private final String fullName;
-    private final String picture;
-    private final String password;
-
-    private User(UUID id, String username, String fullName, String picture, String password) {
-        this.id = id;
-        this.username = username;
-        this.fullName = fullName;
-        this.picture = picture;
-        this.password = password;
-    }
+    UUID id;
+    String username;
+    String fullName;
+    String picture;
+    String password;
 
     private User(String username, String fullName, String picture, String password) {
         this.id = null;
@@ -51,5 +44,4 @@ public class User {
     public boolean checkPassword(String pw) {
         return Password.check(pw, password);
     }
-
 }

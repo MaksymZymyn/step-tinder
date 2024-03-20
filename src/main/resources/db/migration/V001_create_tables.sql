@@ -16,10 +16,11 @@ CREATE TABLE likes (
 );
 
 CREATE TABLE messages (
-                          id SERIAL PRIMARY KEY,
+                          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                           user_from UUID NOT NULL,
                           user_to UUID NOT NULL,
                           content TEXT,
+                          time TIMESTAMP,
                           CONSTRAINT messages_users_from_fk FOREIGN KEY (user_from) REFERENCES users (id) ON DELETE CASCADE,
                           CONSTRAINT messages_users_to_fk FOREIGN KEY (user_to) REFERENCES users (id) ON DELETE CASCADE
 );
