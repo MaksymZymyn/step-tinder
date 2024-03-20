@@ -27,7 +27,7 @@ public class LoginServlet extends HttpServlet {
         Auth.getCookieValue(req).ifPresentOrElse(
                 cookieValue -> {
                     try {
-                        resp.sendRedirect("/users");
+                        resp.sendRedirect("/liked");
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -54,7 +54,7 @@ public class LoginServlet extends HttpServlet {
 
             if (user.checkPassword(password)) {
                 Auth.setCookieValue(user.getId().toString(), resp);
-                resp.sendRedirect("/users");
+                resp.sendRedirect("/liked");
             } else {
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("error", "Invalid username or password.");

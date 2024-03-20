@@ -16,7 +16,7 @@ public class App {
         ServletContextHandler handler = new ServletContextHandler();
         var sfd = EnumSet.of(DispatcherType.REQUEST);
 
-        handler.addServlet(new ServletHolder(new StaticFileServlet("static")), "/static/*");
+        handler.addServlet(new ServletHolder(new StaticFileServlet("templates")), "/static/*");
         handler.addFilter(AuthFilter.class, "/liked", sfd);
         handler.addServlet(new ServletHolder(new LikeServlet()), "/liked");
         handler.addFilter(AuthFilter.class, "/messages/*", sfd);
