@@ -56,6 +56,6 @@ public class Auth {
     }
 
     public static void renderUnregistered(HttpServletResponse rs) throws IOException {
-        rs.sendRedirect("/login");
+        rs.setStatus(401);
     }
 }
