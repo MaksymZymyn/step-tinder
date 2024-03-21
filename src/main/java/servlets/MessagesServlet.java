@@ -52,37 +52,7 @@ public class MessagesServlet extends HttpServlet {
         }
     }
 
-    //    @Override
-//    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-//        UUID idFrom = UUID.fromString(Auth.getCookieValueForced(req));
-//        String idToParam = req.getParameter("id");
-//        UUID idTo = UUID.fromString(idToParam);
-//
-//        String messageText = req.getParameter("messageText");
-//        UUID fromUserId = idFrom;
-//        UUID toUserId = idTo;
-//        Message message = new Message(fromUserId, toUserId, messageText);
-//        System.out.println(resp);
-//        try {
-//            if (messageService.addMessage(message)) {
-//                try {
-//
-//                    System.out.println(idFrom);
-//                    System.out.println(idTo);
-//                    updateChat(resp, idFrom, idTo); // Передаем idFrom и idTo
-//                } catch (SQLException e) {
-//                    throw new RuntimeException(e);
-//                } catch (InvalidUserDataException | UserNotFoundException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            } else {
-//                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-    @Override
+        @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         UUID idFrom = UUID.fromString(Auth.getCookieValueForced(req));
         String idToParam = req.getParameter("id");
@@ -92,15 +62,23 @@ public class MessagesServlet extends HttpServlet {
         UUID fromUserId = idFrom;
         UUID toUserId = idTo;
         Message message = new Message(fromUserId, toUserId, messageText);
-
+        System.out.println(resp);
         try {
             if (messageService.addMessage(message)) {
-                // Редирект на текущую страницу
-                resp.sendRedirect(req.getRequestURI());
+                try {
+
+                    System.out.println(idFrom);
+                    System.out.println(idTo);
+                    updateChat(resp, idFrom, idTo); // Передаем idFrom и idTo
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                } catch (InvalidUserDataException | UserNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
             } else {
                 resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
-        } catch (IOException | SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

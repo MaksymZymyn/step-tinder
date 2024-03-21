@@ -80,8 +80,8 @@
                         <div class="col-md-2 options-left">
                             <i class="fa fa-smile-o"></i>
                         </div>
-                        <form  class="col-md-7 pl-0" method="post" >
-                            <input name="messageText" type="text" class="border-0" placeholder=" Send message" />
+                        <form  class="col-md-7 pl-0" method="post"  >
+                            <input id="messageInput" name="messageText" type="text" class="border-0" placeholder=" Send message" />
                         </form>
                         <div class="col-md-3 text-right options-right">
                             <i class="fa fa-picture-o mr-2"></i>
@@ -92,52 +92,6 @@
         </div>
     </div>
 </div>
-<#--<script>-->
-<#--    document.getElementById("messageInput").addEventListener("keypress", function(event) {-->
-<#--        if (event.key === "Enter") {-->
-<#--            event.preventDefault();-->
-<#--            sendMessage();-->
-<#--        }-->
-<#--    });-->
-<#--    function sendMessage() {-->
-<#--        var messageText = document.getElementById("messageInput").value;-->
-<#--        var urlParams = new URLSearchParams(window.location.search);-->
-<#--        var idTo = urlParams.get('id');-->
-<#--        var xhr = new XMLHttpRequest();-->
-<#--        xhr.open("POST", "/messages?id=" + idTo, true); // Передаем параметр "id" в URL-->
-<#--        xhr.setRequestHeader("Content-Type", "application/json");-->
-<#--        xhr.onreadystatechange = function() {-->
-<#--            if (xhr.readyState === 4) {-->
-<#--                if (xhr.status === 200) {-->
-<#--                    document.getElementById("messageInput").value = ""; // Очистите поле ввода после успешной отправки-->
-<#--                    updateChat(); // Обновите чат после отправки сообщения-->
-<#--                } else {-->
-<#--                    console.error("Ошибка при отправке сообщения");-->
-<#--                }-->
-<#--            }-->
-<#--        };-->
-<#--        xhr.send(JSON.stringify({ "messageText": messageText }));-->
-<#--    }-->
-
-
-<#--    function updateChat() {-->
-<#--        var xhr = new XMLHttpRequest();-->
-<#--        var urlParams = new URLSearchParams(window.location.search);-->
-<#--        var idTo = urlParams.get('id');-->
-<#--        xhr.onreadystatechange = function() {-->
-<#--            if (xhr.readyState === 4) {-->
-<#--                if (xhr.status === 200) {-->
-<#--                    document.getElementById("chat").innerHTML = xhr.responseText;-->
-<#--                } else {-->
-<#--                    console.error("Помилка при оновленні чату");-->
-<#--                }-->
-<#--            }-->
-<#--        };-->
-<#--        xhr.open("GET","/messages?id=" + idTo, true);-->
-<#--        xhr.send();-->
-<#--    }-->
-
-<#--</script>-->
 
 </body>
 </html>
