@@ -11,9 +11,13 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .card-body {
+            text-align: center;
+        }
+    </style>
 </head>
 <body style="background-color: #f5f5f5;">
-
 <div class="col-4 offset-4">
     <div class="card">
         <div class="card-body">
@@ -26,18 +30,16 @@
                     <h1 class="mb-0 text-truncated">${fullName}</h1>
                     <br>
                 </div>
-                <div class="col-12 col-lg-6">
-                    <form method="post">
+                <div class="col-12 text-center">
+                    <form method="post" style="display: inline-block;">
                         <input type="hidden" name="choice" value="Like">
-                        <button type="submit" name="Like" value="Like" class="btn btn-outline-success btn-block">
+                        <button type="submit" name="Like" value="Like" class="btn btn-outline-success">
                             <span class="fa fa-heart"></span> Like
                         </button>
                     </form>
-                </div>
-                <div class="col-12 col-lg-6">
-                    <form method="post">
+                    <form method="post" style="display: inline-block; margin-left: 10px;">
                         <input type="hidden" name="choice" value="Dislike">
-                        <button type="submit" name="Dislike" value="Dislike" class="btn btn-outline-danger btn-block">
+                        <button type="submit" name="Dislike" value="Dislike" class="btn btn-outline-danger">
                             <span class="fa fa-times"></span> Dislike
                         </button>
                     </form>
@@ -46,6 +48,5 @@
         </div>
     </div>
 </div>
-
 </body>
 </html>

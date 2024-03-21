@@ -1,47 +1,70 @@
-<!-- people-list.ftl -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liked Users</title>
     <link rel="icon" href="/static/img/favicon.ico">
-
-    <title>People list</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-    <!-- Bootstrap core CSS -->
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link rel="stylesheet" href="../css/style.css">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .avatar-img {
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+            border-radius: 50%;
+            margin-right: 10px;
+            align-self: center;
+        }
+        .avatar-img img {
+            width: 100%;
+            height: auto;
+            align-self: center;
+        }
+        .btn-chat {
+            width: 80px;
+            margin-top: 10px;
+            align-self: center;
+        }
+        .card-header {
+            background-color: blue;
+            color: white;
+            display: inline-block;
+            padding-left: 10px;
+            padding-right: 10px;
+            width: 1.2 * auto;
+            align-self: center;
+        }
+    </style>
 </head>
-<body>
+<body style="background-color: #f5f5f5;">
 
-<div class="container">
-    <div class="row">
-        <div class="col-8 offset-2">
-            <div class="panel panel-default user_panel">
-                <div class="panel-heading">
-                    <h1 class="panel-title">Liked Users</h1>
+<div class="container" align="center">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-8">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="card-title text-center">Liked Users</h1>
                 </div>
-                <div class="panel-body">
-                    <div class="table-container">
-                        <table class="table-users table" border="0">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
                             <tbody>
                             <#list users as user>
-                                <tr onclick="window.location='/messages/${user.id}';">
-                                    <td width="10">
-                                        <div class="avatar-img">
-                                            <img class="img-circle" src="${user.picture}" alt="${user.username}"/>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-img">
+                                                <img class="img-circle" src="${user.picture}" alt="${user.username}">
+                                            </div>
+                                            <div>
+                                                <span>${user.fullName}</span>
+                                            </div>
                                         </div>
-
                                     </td>
-                                    <td class="align-middle">
-                                        ${user.fullName}
-                                    </td>
-                                    <td class="align-middle">
-                                        <a href='/messages/${user.id}' class="btn btn-lg btn-secondary btn-block mt-3">Chat</a>
+                                    <td>
+                                        <a href="/messages/${user.id}" class="btn btn-primary btn-chat">Chat</a>
                                     </td>
                                 </tr>
                             </#list>
