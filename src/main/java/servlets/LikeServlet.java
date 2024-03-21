@@ -25,11 +25,11 @@ public class LikeServlet extends HttpServlet {
         UUID currentUserId = UUID.fromString(Auth.getCookieValueForced(req));
         List<User> likedUsers = likeService.getLikedUsers(currentUserId);
 
-        HashMap<String, Object> users = new HashMap<>();
-        users.put("users", likedUsers);
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("users", likedUsers);
 
         try (PrintWriter w = resp.getWriter()) {
-            freemarker.render("people-list.ftl", users, w);
+            freemarker.render("people-list.ftl", data, w);
         }
     }
 }

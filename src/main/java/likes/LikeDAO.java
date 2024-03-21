@@ -51,7 +51,7 @@ public class LikeDAO implements DAO<Like> {
         List<User> likedUsers = new ArrayList<>();
         try (Connection conn = Database.connect()) {
             String selectLikedUsers = """
-                SELECT u.id, u.username, u.full_name, u.picture 
+                SELECT u.id, u.username, u.full_name, u.picture, u.password 
                 FROM users u
                 JOIN likes l ON u.id = l.user_to
                 WHERE l.value = true AND l.user_from=?
