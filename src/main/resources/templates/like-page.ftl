@@ -22,27 +22,29 @@
             <div class="row">
                 <div class="col-12 col-lg-12 col-md-12 text-center">
                     <img src="${picture}" alt="" class="mx-auto rounded-circle img-fluid">
-                    <h3 class="mb-0 text-truncated">${fullName}</h3>
+                    <h1 class="mb-0 text-truncated">${fullName}</h1>
                     <br>
                 </div>
                 <div class="col-12 col-lg-6">
-                    <form action="/users" method="post">
-                        <button name="action" value="dislike" type="submit" class="btn btn-outline-danger btn-block">
-                            <span class="fa fa-times"></span> Dislike
-                        </button>
-                        <button name="action" value="like" type="submit" class="btn btn-outline-success btn-block">
+                    <form method="post">
+                        <input type="hidden" name="choice" value="Like">
+                        <button type="submit" name="Like" value="Like" class="btn btn-outline-success btn-block">
                             <span class="fa fa-heart"></span> Like
                         </button>
                     </form>
                 </div>
-                <!--/col-->
+                <div class="col-12 col-lg-6">
+                    <form method="post">
+                        <input type="hidden" name="choice" value="Dislike">
+                        <button type="submit" name="Dislike" value="Dislike" class="btn btn-outline-danger btn-block">
+                            <span class="fa fa-times"></span> Dislike
+                        </button>
+                    </form>
+                </div>
             </div>
-            <!--/row-->
         </div>
-        <!--/card-block-->
     </div>
 </div>
 
 </body>
-
 </html>

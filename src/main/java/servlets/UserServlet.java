@@ -16,7 +16,8 @@ public class UserServlet extends HttpServlet {
     UserService userService;
     LikeService likeService;
     FreemarkerService freemarker;
-    User nextUser;
+    private List<User> users;
+    private int currentIndex = 0;
 
     public UserServlet() throws IOException {
         this.userService = new UserService(new UserDAO());
@@ -28,14 +29,16 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
             UUID currentUserId = UUID.fromString(Auth.getCookieValueForced(req));
-            Optional<User> nextUserOptional = userService.nextUser(currentUserId);
-            if (nextUserOptional.isPresent()) {
-                nextUser = nextUserOptional.get();
+            users = userService.getAllExcept(currentUserId);
+
+            User targetUser = users.get(currentIndex);
+
+            if (targetUser != null) {
                 HashMap<String, Object> data = new HashMap<>();
-                data.put("picture", nextUser.getPicture());
-                data.put("fullName", nextUser.getFullName());
-                data.put("username", nextUser.getUsername());
-                data.put("id", nextUser.getId());
+                data.put("picture", targetUser.getPicture());
+                data.put("fullName", targetUser.getFullName());
+                data.put("username", targetUser.getUsername());
+                data.put("id", targetUser.getId());
 
                 freemarker.render("like-page.ftl", data, resp.getWriter());
             } else {
@@ -48,36 +51,19 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        UUID currentUserId = UUID.fromString(Auth.getCookieValueForced(req));
-        if (nextUser != null) {
-            try {
-                String action = req.getParameter("action");
+        String choiceOfUser = req.getParameter("choice");
 
-                if (action == null || action.isEmpty()) {
-                    resp.getWriter().write("Error: Missing action parameter");
-                    return;
-                }
-
-                switch (action) {
-                    case "like":
-                        doGet(req, resp);
-                        likeService.insert(new Like(UUID.randomUUID(), currentUserId, nextUser.getId(), true));
-                        break;
-                    case "dislike":
-                        doGet(req, resp);
-                        likeService.insert(new Like(UUID.randomUUID(), currentUserId, nextUser.getId(), false));
-                        break;
-                    default:
-                        resp.getWriter().write("Error: Invalid action parameter");
-                        return;
-                }
-
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+        if (choiceOfUser != null) {
+            if (choiceOfUser.equals("Like") || choiceOfUser.equals("Dislike")) {
+                currentIndex++;
             }
-        } else {
-            resp.sendRedirect("/liked");
         }
+
+        if (currentIndex >= users.size()) {
+            resp.sendRedirect("/liked");
+            return;
+        }
+
+        resp.sendRedirect("/users");
     }
 }

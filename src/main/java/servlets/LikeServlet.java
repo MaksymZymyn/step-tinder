@@ -40,6 +40,7 @@ public class LikeServlet extends HttpServlet {
         data.put("user_name", currentUser.getUsername());
         data.put("full_name", currentUser.getFullName());
         data.put("picture", currentUser.getPicture());
+
         try (PrintWriter w = resp.getWriter()) {
             freemarker.render("people-list.ftl", data, w);
         } catch (IOException e) {
