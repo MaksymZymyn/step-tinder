@@ -15,6 +15,6 @@ public class MessageService {
     }
     public boolean addMessage(Message message) throws SQLException {
         dao.insert(message);
-        return false;
+        return true;
     }
 }
