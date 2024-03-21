@@ -5,8 +5,8 @@ import likes.*;
 import lombok.Data;
 import users.*;
 import utils.FreemarkerService;
+import utils.exceptions.*;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import java.io.*;
 import java.sql.SQLException;
@@ -26,63 +26,36 @@ public class LikeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+        String userUUID = Auth.getCookieValueForced(req);
+
+        User currentUser;
         try {
-            List<User> users = userService.getAll();
-            HashMap<String, Object> data = new HashMap<>();
-            for (int i = 0; i < users.size(); i++) {
-                data.put("picture", users.get(i).getPicture());
-                data.put("fullName", users.get(i).getFullName());
-                data.put("username", users.get(i).getUsername());
-                data.put("id", users.get(i).getId());
-            }
-            freemarker.render("like-page.ftl", data, resp.getWriter());
-        } catch (IOException | SQLException e) {
+            currentUser = userService.get(UUID.fromString(userUUID));
+        } catch (SQLException | UserNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        HashMap<String, Object> data = new HashMap<>();
+
+        data.put("user_name", currentUser.getUsername());
+        data.put("full_name", currentUser.getFullName());
+        data.put("picture", currentUser.getPicture());
+        try (PrintWriter w = resp.getWriter()) {
+            freemarker.render("people-list.ftl", data, w);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        String currentUser = Auth.getCookieValueForced(req);
-        String userIdParam = req.getParameter("id");
+        String username = req.getParameter("username");
+        String fullName = req.getParameter("fullName");
+        String picture = req.getParameter("picture");
+        String password = req.getParameter("password");
         try {
-            UUID userId = UUID.fromString(userIdParam);
-            String action = req.getParameter("action");
-
-            if (action == null || action.isEmpty()) {
-                resp.getWriter().write("Error: Missing action parameter");
-                return;
-            }
-
-            switch (action) {
-                case "like":
-                    likeService.insert(new Like(UUID.randomUUID(), UUID.fromString(currentUser), userId, true));
-                    break;
-                case "dislike":
-                    likeService.insert(new Like(UUID.randomUUID(), UUID.fromString(currentUser), userId, false));
-                    break;
-                default:
-                    resp.getWriter().write("Error: Invalid action parameter");
-                    return;
-            }
-
-            List<User> users = userService.getAll();
-            int currentIndex = -1;
-            for (int i = 0; i < users.size(); i++) {
-                if (users.get(i).getId().equals(userId)) {
-                    currentIndex = i;
-                    break;
-                }
-            }
-
-            if (currentIndex != -1 && currentIndex < users.size() - 1) {
-                User nextUser = users.get(currentIndex + 1);
-                req.setAttribute("user", nextUser);
-                req.getRequestDispatcher("like-page.ftl").forward(req, resp);
-            } else {
-                resp.getWriter().write("No more users to display.");
-            }
-        } catch (IOException | SQLException | ServletException e) {
+            userService.insert(username, fullName, picture, password);
+        } catch (SQLException | RegistrationException e) {
             throw new RuntimeException(e);
         }
     }

@@ -66,6 +66,23 @@ public class UserDAO implements DAO<User> {
         return users;
     }
 
+    public List<User> getAllExcept(UUID userId) throws SQLException {
+        List<User> users = new ArrayList<>();
+        try (Connection conn = Database.connect()) {
+            String selectAllExcept = "SELECT id, username, full_name, picture, password FROM users WHERE id != ?";
+            try (PreparedStatement st = conn.prepareStatement(selectAllExcept)) {
+                st.setObject(1, userId);
+                ResultSet rs = st.executeQuery();
+                while (rs.next()) {
+                    users.add(User.fromRS(rs));
+                }
+            }
+        } catch (InvalidUserDataException e) {
+            throw new RuntimeException("Invalid user data retrieved from the database", e);
+        }
+        return users;
+    }
+
     @Override
     public void insert(User u) throws SQLException {
         try (Connection conn = Database.connect()) {
@@ -82,6 +99,23 @@ public class UserDAO implements DAO<User> {
             st.setString(4, u.getPassword());
 
             int ignoredN = st.executeUpdate();
+        }
+    }
+
+    public Optional<User> nextUser(UUID currentUserId) throws SQLException {
+        try (Connection conn = Database.connect()) {
+            String selectNextUser = "SELECT id, username, full_name, picture, password FROM users WHERE id <> ? ORDER BY id ASC LIMIT 1";
+            try (PreparedStatement st = conn.prepareStatement(selectNextUser)) {
+                st.setObject(1, currentUserId);
+                ResultSet rs = st.executeQuery();
+                if (rs.next()) {
+                    return Optional.of(User.fromRS(rs));
+                } else {
+                    return Optional.empty();
+                }
+            }
+        } catch (InvalidUserDataException e) {
+            throw new RuntimeException("Invalid user data retrieved from the database", e);
         }
     }
 }

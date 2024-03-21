@@ -13,23 +13,36 @@
 </head>
 <body style="background-color: #f5f5f5;">
 
-<div class="container">
-    <div class="row">
-            <div class="col-md-4 mb-3">
-                <div class="card">
-                    <img src="${picture}" class="card-img-top" alt="${fullName}">
-                    <div class="card-body">
-                        <h1 class="card-title">${fullName}</h1>
-                        <form action="/users" method="post">
-                            <input type="hidden" name="id" value="${id}">
-                            <button href="/users" type="submit" name="action" value="like" class="btn btn-outline-success"><span class="fa fa-heart"></span> Like</button>
-                            <button href="/users" type="submit" name="action" value="dislike" class="btn btn-outline-danger"><span class="fa fa-times"></span> Dislike</button>
-                        </form>
-                    </div>
-                </div>
+<div class="col-4 offset-4">
+    <div class="card">
+        <div class="card-body">
+            <div class="link-page-l">
+                <a class="link_regLogin-l" href="/liked"><i class="fas fa-heart"></i></a>
             </div>
+            <div class="row">
+                <div class="col-12 col-lg-12 col-md-12 text-center">
+                    <img src="${picture}" alt="" class="mx-auto rounded-circle img-fluid">
+                    <h3 class="mb-0 text-truncated">${fullName}</h3>
+                    <br>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <form action="/users" method="post">
+                        <button name="action" value="dislike" type="submit" class="btn btn-outline-danger btn-block">
+                            <span class="fa fa-times"></span> Dislike
+                        </button>
+                        <button name="action" value="like" type="submit" class="btn btn-outline-success btn-block">
+                            <span class="fa fa-heart"></span> Like
+                        </button>
+                    </form>
+                </div>
+                <!--/col-->
+            </div>
+            <!--/row-->
+        </div>
+        <!--/card-block-->
     </div>
 </div>
+
 </body>
 
 </html>

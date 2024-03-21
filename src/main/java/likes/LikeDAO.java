@@ -45,6 +45,27 @@ public class LikeDAO implements DAO<Like> {
     }
 
     @SneakyThrows(SQLException.class)
+    public List<Like> getByUsers(UUID userFrom, UUID userTo) {
+        List<Like> filteredLikes = new ArrayList<>();
+        try (Connection connection = Database.connect()) {
+            String sql = "SELECT * FROM likes WHERE user_from = ? AND user_to = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setObject(1, userFrom);
+            statement.setObject(2, userTo);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                UUID id = UUID.fromString(resultSet.getString("id"));
+                UUID user_from = UUID.fromString(resultSet.getString("user_from"));
+                UUID user_to = UUID.fromString(resultSet.getString("user_to"));
+                boolean likeValue = resultSet.getBoolean("value");
+                Like like = new Like(id, user_from, user_to, likeValue);
+                filteredLikes.add(like);
+            }
+        }
+        return filteredLikes;
+    }
+
+    @SneakyThrows(SQLException.class)
     public List<Like> getByChoice(boolean value) {
         List<Like> filteredLikes = new ArrayList<>();
 

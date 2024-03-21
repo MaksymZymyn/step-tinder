@@ -16,6 +16,10 @@ public class LikeService {
         return likeDAO.get(id);
     }
 
+    public List<Like> getByUsers(UUID userFrom, UUID userTo) {
+        return likeDAO.getByUsers(userFrom, userTo);
+    }
+
     public List<Like> getByChoice(boolean liked) {
         return likeDAO.getByChoice(liked);
     }
