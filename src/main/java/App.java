@@ -16,7 +16,6 @@ public class App {
         ServletContextHandler handler = new ServletContextHandler();
         var sfd = EnumSet.of(DispatcherType.REQUEST);
 
-        handler.addServlet(new ServletHolder(new StaticFileServlet("templates")), "/static/*");
         handler.addFilter(AuthFilter.class, "/users", sfd);
         handler.addFilter(CharsetFilter.class, "/users", sfd);
         handler.addServlet(new ServletHolder(new UserServlet()), "/users");
@@ -28,6 +27,7 @@ public class App {
         handler.addServlet(new ServletHolder(new LikeServlet()), "/liked");
         handler.addServlet(new ServletHolder(new LoginServlet()), "/login");
         handler.addServlet(new ServletHolder(new RegisterServlet()), "/register");
+        handler.addServlet(new ServletHolder(new LogoutServlet()), "/logout");
 
         server.setHandler(handler);
 

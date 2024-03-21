@@ -42,7 +42,7 @@ public class UserServlet extends HttpServlet {
 
                 freemarker.render("like-page.ftl", data, resp.getWriter());
             } else {
-                resp.getWriter().write("No users found.");
+                resp.sendRedirect("/liked");
             }
         } catch (IOException | SQLException e) {
             throw new RuntimeException(e);

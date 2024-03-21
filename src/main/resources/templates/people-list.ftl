@@ -72,6 +72,9 @@
                         </table>
                     </div>
                 </div>
+                <div class="link-page-l">
+                    <a class="link_regLogin-l" href="/logout"><i class="fas fa-heart"></i></a>
+                </div>
             </div>
         </div>
     </div>

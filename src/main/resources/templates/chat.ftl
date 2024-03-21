@@ -22,7 +22,7 @@
         <div class="chat-main col-6 offset-3">
             <div class="col-md-12 chat-header">
                 <div class="navigate-cont">
-                    <a class="btn btn-lg btn-light" href="/user">UsersForLike</a>
+                    <a class="btn btn-lg btn-light" href="/users">UsersForLike</a>
                     <a class="btn btn-lg btn-light" style="float: right" href="/liked">Liked</a>
                 </div>
                 <div class="row header-one text-white p-1">
@@ -87,7 +87,11 @@
                             <i class="fa fa-picture-o mr-2"></i>
                         </div>
                     </div>
+                    <div class="navigate-cont">
+                        <a class="btn btn-lg btn-light" href="/logout">Logout</a>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
