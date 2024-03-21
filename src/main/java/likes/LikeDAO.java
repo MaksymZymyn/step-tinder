@@ -69,4 +69,33 @@ public class LikeDAO implements DAO<Like> {
         }
         return likedUsers;
     }
+
+    public Optional<User> getFirstAvailableUser(UUID currentUserId) throws SQLException {
+        try (Connection conn = Database.connect()) {
+            String selectFirstAvailableUser = """
+                SELECT u.id, u.username, u.full_name, u.picture, u.password 
+                FROM users u
+                WHERE u.id NOT IN (
+                    SELECT l.user_to 
+                    FROM likes l
+                    WHERE l.user_from = ?
+                )
+                AND u.id != ?
+                LIMIT 1
+            """;
+
+            try (PreparedStatement st = conn.prepareStatement(selectFirstAvailableUser)) {
+                st.setObject(1, currentUserId);
+                st.setObject(2, currentUserId);
+                ResultSet rs = st.executeQuery();
+
+                if (rs.next()) {
+                    return Optional.of(User.fromRS(rs));
+                }
+            }
+        } catch (InvalidUserDataException e) {
+            throw new RuntimeException("Invalid user data retrieved from the database", e);
+        }
+        return Optional.empty();
+    }
 }

@@ -17,7 +17,6 @@ public class UserServlet extends HttpServlet {
     LikeService likeService;
     FreemarkerService freemarker;
     private List<User> users;
-    private int currentIndex = 0;
 
     public UserServlet() throws IOException {
         this.userService = new UserService(new UserDAO());
@@ -31,9 +30,10 @@ public class UserServlet extends HttpServlet {
             UUID currentUserId = UUID.fromString(Auth.getCookieValueForced(req));
             users = userService.getAllExcept(currentUserId);
 
-            User targetUser = users.get(currentIndex);
+            Optional<User> targetUserOpt = likeService.getFirstAvailableUser(currentUserId);
 
-            if (targetUser != null) {
+            if (targetUserOpt.isPresent()) {
+                User targetUser = targetUserOpt.get();
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("picture", targetUser.getPicture());
                 data.put("fullName", targetUser.getFullName());
@@ -50,35 +50,35 @@ public class UserServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
             UUID currentUserId = UUID.fromString(Auth.getCookieValueForced(req));
 
-            users = userService.getAllExcept(currentUserId);
-            User targetUser = users.get(currentIndex);
+            Optional<User> targetUserOpt = likeService.getFirstAvailableUser(currentUserId);
 
-            String choiceOfUser = req.getParameter("choice");
+            if (targetUserOpt.isPresent()) {
+                User targetUser = targetUserOpt.get();
 
-            if (choiceOfUser != null) {
-                switch (choiceOfUser) {
-                    case "Like":
-                        likeService.insert(new Like(UUID.randomUUID(), currentUserId, targetUser.getId(), true));
-                        currentIndex++;
-                        break;
-                    case "Dislike":
-                        likeService.insert(new Like(UUID.randomUUID(), currentUserId, targetUser.getId(), false));
-                        currentIndex++;
-                        break;
-                    default:
-                        resp.getWriter().write("Error: Invalid action parameter");
-                        return;
+                String choiceOfUser = req.getParameter("choice");
+
+                if (choiceOfUser != null) {
+                    switch (choiceOfUser) {
+                        case "Like":
+                            likeService.insert(new Like(UUID.randomUUID(), currentUserId, targetUser.getId(), true));
+                            break;
+                        case "Dislike":
+                            likeService.insert(new Like(UUID.randomUUID(), currentUserId, targetUser.getId(), false));
+                            break;
+                        default:
+                            resp.getWriter().write("Error: Invalid action parameter");
+                            return;
+                    }
                 }
-            }
-
-            if (currentIndex >= users.size()) {
+            } else {
                 resp.sendRedirect("/liked");
                 return;
             }
+
             resp.sendRedirect("/users");
         } catch (IOException | SQLException e) {
             throw new RuntimeException(e);

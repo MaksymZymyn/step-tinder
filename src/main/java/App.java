@@ -1,4 +1,5 @@
 import filters.AuthFilter;
+import filters.CharsetFilter;
 import servlets.UserServlet;
 import servlets.LikeServlet;
 import org.eclipse.jetty.server.Server;
@@ -17,10 +18,13 @@ public class App {
 
         handler.addServlet(new ServletHolder(new StaticFileServlet("templates")), "/static/*");
         handler.addFilter(AuthFilter.class, "/users", sfd);
+        handler.addFilter(CharsetFilter.class, "/users", sfd);
         handler.addServlet(new ServletHolder(new UserServlet()), "/users");
         handler.addFilter(AuthFilter.class, "/messages/*", sfd);
+        handler.addFilter(CharsetFilter.class, "/messages/*", sfd);
         handler.addServlet(new ServletHolder(new MessagesServlet()), "/messages/*");
         handler.addFilter(AuthFilter.class, "/liked", sfd);
+        handler.addFilter(CharsetFilter.class, "/liked", sfd);
         handler.addServlet(new ServletHolder(new LikeServlet()), "/liked");
         handler.addServlet(new ServletHolder(new LoginServlet()), "/login");
         handler.addServlet(new ServletHolder(new RegisterServlet()), "/register");

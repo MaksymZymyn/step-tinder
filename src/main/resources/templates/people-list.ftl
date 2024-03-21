@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liked Users</title>
     <link rel="icon" href="/static/img/favicon.ico">
@@ -64,7 +64,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <a href="/messages/${user.id}" class="btn btn-primary btn-chat">Chat</a>
+                                        <a href="/messages?id=${user.id}" class="btn btn-primary btn-chat">Chat</a>
                                     </td>
                                 </tr>
                             </#list>
