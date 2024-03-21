@@ -11,6 +11,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="/static/img/favicon.ico">
 
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="/static/css/style.css">

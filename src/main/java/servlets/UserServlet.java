@@ -51,19 +51,37 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String choiceOfUser = req.getParameter("choice");
+        try {
+            UUID currentUserId = UUID.fromString(Auth.getCookieValueForced(req));
 
-        if (choiceOfUser != null) {
-            if (choiceOfUser.equals("Like") || choiceOfUser.equals("Dislike")) {
-                currentIndex++;
+            users = userService.getAllExcept(currentUserId);
+            User targetUser = users.get(currentIndex);
+
+            String choiceOfUser = req.getParameter("choice");
+
+            if (choiceOfUser != null) {
+                switch (choiceOfUser) {
+                    case "Like":
+                        likeService.insert(new Like(UUID.randomUUID(), currentUserId, targetUser.getId(), true));
+                        currentIndex++;
+                        break;
+                    case "Dislike":
+                        likeService.insert(new Like(UUID.randomUUID(), currentUserId, targetUser.getId(), false));
+                        currentIndex++;
+                        break;
+                    default:
+                        resp.getWriter().write("Error: Invalid action parameter");
+                        return;
+                }
             }
-        }
 
-        if (currentIndex >= users.size()) {
-            resp.sendRedirect("/liked");
-            return;
+            if (currentIndex >= users.size()) {
+                resp.sendRedirect("/liked");
+                return;
+            }
+            resp.sendRedirect("/users");
+        } catch (IOException | SQLException e) {
+            throw new RuntimeException(e);
         }
-
-        resp.sendRedirect("/users");
     }
 }
