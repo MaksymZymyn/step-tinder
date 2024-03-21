@@ -19,10 +19,10 @@ public class Message {
     private UUID fromUserId;
     private UUID toUserId;
     private String messageText;
-    private long time;
+    private Long time;
 
     public Message(UUID fromUserId, UUID toUserId, String messageText) {
-        this(null, fromUserId, toUserId, messageText, LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli());
+        this(null, fromUserId, toUserId, messageText, null);
     }
 
     public static Message fromRS(ResultSet rs) throws SQLException, InvalidMessageDataException {
@@ -38,10 +38,10 @@ public class Message {
         return new Message(messageId, fromUserId, toUserId, messageText, time);
     }
 
-    public static String formatUnixTimestamp(long timestamp) {
-        Date date = new Date(timestamp);
+    public static String formatUnixTimestamp(Long timestamp) {
+        Date date = new Date(timestamp * 1000);
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, HH:mm", Locale.ENGLISH);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        sdf.setTimeZone(TimeZone.getTimeZone("Europe/Kiev"));
         return sdf.format(date);
     }
 }

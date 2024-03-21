@@ -37,13 +37,11 @@ public class MessageDAO implements DAO<Message> {
 
     public void insert(Message message) throws SQLException {
         try (Connection con = Database.connect()) {
-            String sql = "INSERT INTO messages (id, user_from, user_to, content, time) values (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO messages (user_from, user_to, content) values ( ?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setObject(1, message.getMessageId());
-            ps.setObject(2, message.getFromUserId());
-            ps.setObject(3, message.getToUserId());
-            ps.setObject(4, message.getMessageText());
-            ps.setObject(5, message.getTime());
+            ps.setObject(1, message.getFromUserId());
+            ps.setObject(2, message.getToUserId());
+            ps.setObject(3, message.getMessageText());
             ps.execute();
         }
     }
