@@ -1,6 +1,7 @@
 package likes;
 
 import lombok.*;
+import users.User;
 import java.util.*;
 
 @AllArgsConstructor
@@ -16,16 +17,7 @@ public class LikeService {
         return likeDAO.get(id);
     }
 
-    public List<Like> getByUsers(UUID userFrom, UUID userTo) {
-        return likeDAO.getByUsers(userFrom, userTo);
-    }
-
-    public List<Like> getByChoice(boolean liked) {
-        return likeDAO.getByChoice(liked);
-    }
-
-    public boolean hasBeenLiked(UUID user_to) {
-        List<Like> likes = likeDAO.getByChoice(true);
-        return likes.stream().anyMatch(like -> like.getUser_to().equals(user_to));
+    public List<User> getLikedUsers(UUID userId) {
+        return likeDAO.getLikedUsers(userId);
     }
 }

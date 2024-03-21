@@ -19,10 +19,6 @@ public class UserService {
         return dao.get(id).orElseThrow(UserNotFoundException::new);
     }
 
-    public List<User> getAll() throws SQLException {
-        return dao.getAll();
-    }
-
     public List<User> getAllExcept(UUID userId) throws SQLException {
         return dao.getAllExcept(userId);
     }
@@ -30,9 +26,5 @@ public class UserService {
     public User insert(String username, String fullName, String picture, String password) throws SQLException, RegistrationException {
         dao.insert(User.make(username, fullName, picture, password));
         return dao.get(username).orElseThrow(RegistrationException::new);
-    }
-
-    public Optional<User> nextUser(UUID currentUserId) throws SQLException {
-        return dao.nextUser(currentUserId);
     }
 }

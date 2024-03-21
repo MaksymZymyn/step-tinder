@@ -5,59 +5,31 @@ import likes.*;
 import lombok.Data;
 import users.*;
 import utils.FreemarkerService;
-import utils.exceptions.*;
 
 import javax.servlet.http.*;
 import java.io.*;
-import java.sql.SQLException;
 import java.util.*;
 
 @Data
 public class LikeServlet extends HttpServlet {
-    UserService userService;
     LikeService likeService;
     FreemarkerService freemarker;
 
     public LikeServlet() throws IOException {
-        this.userService = new UserService(new UserDAO());
         this.likeService = new LikeService(new LikeDAO());
         this.freemarker = new FreemarkerService("templates");
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-        String userUUID = Auth.getCookieValueForced(req);
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        UUID currentUserId = UUID.fromString(Auth.getCookieValueForced(req));
+        List<User> likedUsers = likeService.getLikedUsers(currentUserId);
 
-        User currentUser;
-        try {
-            currentUser = userService.get(UUID.fromString(userUUID));
-        } catch (SQLException | UserNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        HashMap<String, Object> data = new HashMap<>();
-
-        data.put("user_name", currentUser.getUsername());
-        data.put("full_name", currentUser.getFullName());
-        data.put("picture", currentUser.getPicture());
+        HashMap<String, Object> users = new HashMap<>();
+        users.put("users", likedUsers);
 
         try (PrintWriter w = resp.getWriter()) {
-            freemarker.render("people-list.ftl", data, w);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        String username = req.getParameter("username");
-        String fullName = req.getParameter("fullName");
-        String picture = req.getParameter("picture");
-        String password = req.getParameter("password");
-        try {
-            userService.insert(username, fullName, picture, password);
-        } catch (SQLException | RegistrationException e) {
-            throw new RuntimeException(e);
+            freemarker.render("people-list.ftl", users, w);
         }
     }
 }
