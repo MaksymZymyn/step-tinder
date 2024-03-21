@@ -22,8 +22,8 @@
                         <h1 class="card-title">${fullName}</h1>
                         <form action="/users" method="post">
                             <input type="hidden" name="id" value="${id}">
-                            <button type="submit" name="action" value="like" class="btn btn-outline-success"><span class="fa fa-heart"></span> Like</button>
-                            <button type="submit" name="action" value="dislike" class="btn btn-outline-danger"><span class="fa fa-times"></span> Dislike</button>
+                            <button href="/users" type="submit" name="action" value="like" class="btn btn-outline-success"><span class="fa fa-heart"></span> Like</button>
+                            <button href="/users" type="submit" name="action" value="dislike" class="btn btn-outline-danger"><span class="fa fa-times"></span> Dislike</button>
                         </form>
                     </div>
                 </div>
