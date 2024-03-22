@@ -64,7 +64,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <a href="/messages?id=${user.id}" class="btn btn-primary btn-chat">Chat</a>
+                                        <a href="/messages/${user.id}" class="btn btn-primary btn-chat">Chat</a>
                                     </td>
                                 </tr>
                             </#list>
