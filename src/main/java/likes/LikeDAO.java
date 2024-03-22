@@ -2,7 +2,9 @@ package likes;
 
 import database.Database;
 import lombok.SneakyThrows;
+import users.User;
 import utils.exceptions.InvalidLikeDataException;
+import utils.exceptions.InvalidUserDataException;
 import utils.interfaces.DAO;
 import java.sql.*;
 import java.util.*;
@@ -45,25 +47,55 @@ public class  LikeDAO implements DAO<Like> {
     }
 
     @SneakyThrows(SQLException.class)
-    public List<Like> getByChoice(boolean value) {
-        List<Like> filteredLikes = new ArrayList<>();
+    public List<User> getLikedUsers(UUID userId) {
+        List<User> likedUsers = new ArrayList<>();
+        try (Connection conn = Database.connect()) {
+            String selectLikedUsers = """
+                SELECT u.id, u.username, u.full_name, u.picture, u.password 
+                FROM users u
+                JOIN likes l ON u.id = l.user_to
+                WHERE l.value = true AND l.user_from=?
+                """;
 
-        try (Connection connection = Database.connect()) {
-            String sql = "SELECT * FROM likes WHERE value=?";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setBoolean(1, value);
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                UUID id = UUID.fromString(resultSet.getString("id"));
-                UUID user_from = UUID.fromString(resultSet.getString("user_from"));
-                UUID user_to = UUID.fromString(resultSet.getString("user_to"));
-                boolean likeValue = resultSet.getBoolean("value");
-                Like like = new Like(id, user_from, user_to, likeValue);
-                filteredLikes.add(like);
+            try (PreparedStatement st = conn.prepareStatement(selectLikedUsers)) {
+                st.setObject(1, userId);
+                ResultSet rs = st.executeQuery();
+                while (rs.next()) {
+                    likedUsers.add(User.fromRS(rs));
+                }
             }
+        } catch (InvalidUserDataException e) {
+            throw new RuntimeException("Invalid user data retrieved from the database", e);
         }
+        return likedUsers;
+    }
 
-        return filteredLikes;
+    public Optional<User> getFirstAvailableUser(UUID currentUserId) throws SQLException {
+        try (Connection conn = Database.connect()) {
+            String selectFirstAvailableUser = """
+                SELECT u.id, u.username, u.full_name, u.picture, u.password 
+                FROM users u
+                WHERE u.id NOT IN (
+                    SELECT l.user_to 
+                    FROM likes l
+                    WHERE l.user_from = ?
+                )
+                AND u.id != ?
+                LIMIT 1
+            """;
+
+            try (PreparedStatement st = conn.prepareStatement(selectFirstAvailableUser)) {
+                st.setObject(1, currentUserId);
+                st.setObject(2, currentUserId);
+                ResultSet rs = st.executeQuery();
+
+                if (rs.next()) {
+                    return Optional.of(User.fromRS(rs));
+                }
+            }
+        } catch (InvalidUserDataException e) {
+            throw new RuntimeException("Invalid user data retrieved from the database", e);
+        }
+        return Optional.empty();
     }
 }

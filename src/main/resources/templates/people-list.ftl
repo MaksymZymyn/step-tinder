@@ -1,104 +1,79 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../static/img/favicon.ico">
-
-    <title>People list</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liked Users</title>
+    <link rel="icon" href="/static/img/favicon.ico">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-    <!-- Bootstrap core CSS -->
-    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .avatar-img {
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+            border-radius: 50%;
+            margin-right: 10px;
+            align-self: center;
+        }
+        .avatar-img img {
+            width: 100%;
+            height: auto;
+            align-self: center;
+        }
+        .btn-chat {
+            width: 80px;
+            margin-top: 10px;
+            align-self: center;
+        }
+        .card-header {
+            background-color: blue;
+            color: white;
+            display: inline-block;
+            padding-left: 10px;
+            padding-right: 10px;
+            width: 1.2 * auto;
+            align-self: center;
+        }
+    </style>
 </head>
-<body>
+<body style="background-color: #f5f5f5;">
 
-<div class="container">
-    <div class="row">
-        <div class="col-8 offset-2">
-            <div class="panel panel-default user_panel">
-                <div class="panel-heading">
-                    <h3 class="panel-title">User List</h3>
+<div class="container" align="center">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-8">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="card-title text-center">Liked Users</h1>
                 </div>
-                <div class="panel-body">
-                    <div class="table-container">
-                        <table class="table-users table" border="0">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
                             <tbody>
+                            <#list users as user>
                                 <tr>
-                                    <td width="10">
-                                        <div class="avatar-img">
-                                            <img class="img-circle" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxhcCYW4QDWMOjOuUTxOd50KcJvK-rop9qE9zRltSbVS_bO-cfWA" />  
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-img">
+                                                <img class="img-circle" src="${user.picture}" alt="${user.username}">
+                                            </div>
+                                            <div>
+                                                <span>${user.fullName}</span>
+                                            </div>
                                         </div>
-
                                     </td>
-                                    <td class="align-middle">
-                                        Herbert Hoover
-                                    </td>
-                                    <td class="align-middle">
-                                        Builder Sales Agent
-                                    </td>
-                                    <td  class="align-middle">
-                                        Last Login:  6/10/2017<br><small class="text-muted">5 days ago</small>
+                                    <td>
+                                        <a href="/messages?id=${user.id}" class="btn btn-primary btn-chat">Chat</a>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td width="10">
-                                        <div class="avatar-img">
-                                            <img class="img-circle" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxhcCYW4QDWMOjOuUTxOd50KcJvK-rop9qE9zRltSbVS_bO-cfWA" />  
-                                        </div>
-
-                                    </td>
-                                    <td class="align-middle">
-                                        Herbert Hoover
-                                    </td>
-                                    <td class="align-middle">
-                                        Builder Sales Agent
-                                    </td>
-                                    <td  class="align-middle">
-                                        Last Login:  6/10/2017<br><small class="text-muted">5 days ago</small>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td width="10">
-                                        <div class="avatar-img">
-                                            <img class="img-circle" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxhcCYW4QDWMOjOuUTxOd50KcJvK-rop9qE9zRltSbVS_bO-cfWA" />  
-                                        </div>
-
-                                    </td>
-                                    <td class="align-middle">
-                                        Herbert Hoover
-                                    </td>
-                                    <td class="align-middle">
-                                        Builder Sales Agent
-                                    </td>
-                                    <td  class="align-middle">
-                                        Last Login:  6/10/2017<br><small class="text-muted">5 days ago</small>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td width="10">
-                                        <div class="avatar-img">
-                                            <img class="img-circle" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxhcCYW4QDWMOjOuUTxOd50KcJvK-rop9qE9zRltSbVS_bO-cfWA" />  
-                                        </div>
-
-                                    </td>
-                                    <td class="align-middle">
-                                        Herbert Hoover
-                                    </td>
-                                    <td class="align-middle">
-                                        Builder Sales Agent
-                                    </td>
-                                    <td  class="align-middle">
-                                        Last Login:  6/10/2017<br><small class="text-muted">5 days ago</small>
-                                    </td>
-                                </tr>
+                            </#list>
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div class="navigate-cont">
+                    <a class="btn btn-lg btn-light" href="/logout">Logout</a>
                 </div>
             </div>
         </div>

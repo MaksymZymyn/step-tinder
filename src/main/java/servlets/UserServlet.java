@@ -5,8 +5,6 @@ import likes.*;
 import lombok.Data;
 import users.*;
 import utils.FreemarkerService;
-import utils.exceptions.RegistrationException;
-import utils.exceptions.UserNotFoundException;
 
 import javax.servlet.http.*;
 import java.io.*;
@@ -18,6 +16,7 @@ public class UserServlet extends HttpServlet {
     UserService userService;
     LikeService likeService;
     FreemarkerService freemarker;
+    private List<User> users;
 
     public UserServlet() throws IOException {
         this.userService = new UserService(new UserDAO());
@@ -27,59 +26,62 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-        Auth.getCookieValue(req)
-                .ifPresentOrElse(
-                        userUUID -> {
-                            User currentUser;
-                            try {
-                                currentUser = userService.get(UUID.fromString(userUUID));
-                            } catch (SQLException | UserNotFoundException e) {
-                                throw new RuntimeException(e);
-                            }
+        try {
+            UUID currentUserId = UUID.fromString(Auth.getCookieValueForced(req));
+            users = userService.getAllExcept(currentUserId);
 
-                            HashMap<String, Object> data = new HashMap<>();
+            Optional<User> targetUserOpt = likeService.getFirstAvailableUser(currentUserId);
 
-                            data.put("user_name", currentUser.getUsername());
-                            data.put("full_name", currentUser.getFullName());
-                            data.put("picture", currentUser.getPicture());
-                            try (PrintWriter w = resp.getWriter()) {
-                                freemarker.render("people-list.ftl", data, w);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        },
-                        () -> {
-                            try {
-                                Auth.renderUnregistered(resp);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                );
+            if (targetUserOpt.isPresent()) {
+                User targetUser = targetUserOpt.get();
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("picture", targetUser.getPicture());
+                data.put("fullName", targetUser.getFullName());
+                data.put("username", targetUser.getUsername());
+                data.put("id", targetUser.getId());
+
+                freemarker.render("like-page.ftl", data, resp.getWriter());
+            } else {
+                resp.sendRedirect("/liked");
+            }
+        } catch (IOException | SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        Auth.getCookieValue(req)
-                .ifPresentOrElse(
-                        user -> {
-                            String username = req.getParameter("username");
-                            String fullName = req.getParameter("fullName");
-                            String picture = req.getParameter("picture");
-                            String password = req.getParameter("password");
-                            try {
-                                userService.insert(username, fullName, picture, password);
-                            } catch (SQLException | RegistrationException e) {
-                                throw new RuntimeException(e);
-                            }
-                        },
-                        () -> {
-                            try {
-                                Auth.renderUnregistered(resp);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                );
+        try {
+            UUID currentUserId = UUID.fromString(Auth.getCookieValueForced(req));
+
+            Optional<User> targetUserOpt = likeService.getFirstAvailableUser(currentUserId);
+
+            if (targetUserOpt.isPresent()) {
+                User targetUser = targetUserOpt.get();
+
+                String choiceOfUser = req.getParameter("choice");
+
+                if (choiceOfUser != null) {
+                    switch (choiceOfUser) {
+                        case "Like":
+                            likeService.insert(new Like(UUID.randomUUID(), currentUserId, targetUser.getId(), true));
+                            break;
+                        case "Dislike":
+                            likeService.insert(new Like(UUID.randomUUID(), currentUserId, targetUser.getId(), false));
+                            break;
+                        default:
+                            resp.getWriter().write("Error: Invalid action parameter");
+                            return;
+                    }
+                }
+            } else {
+                resp.sendRedirect("/liked");
+                return;
+            }
+
+            resp.sendRedirect("/users");
+        } catch (IOException | SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
