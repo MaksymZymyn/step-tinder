@@ -16,6 +16,7 @@ public class App {
         ServletContextHandler handler = new ServletContextHandler();
         var sfd = EnumSet.of(DispatcherType.REQUEST);
 
+        handler.addServlet(new ServletHolder(new StaticFileServlet("static")), "/static/*");
         handler.addFilter(AuthFilter.class, "/users", sfd);
         handler.addFilter(CharsetFilter.class, "/users", sfd);
         handler.addServlet(new ServletHolder(new UserServlet()), "/users");
