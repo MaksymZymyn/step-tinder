@@ -1,9 +1,7 @@
 package messages;
 
 import lombok.*;
-import users.User;
 import utils.exceptions.InvalidMessageDataException;
-import utils.exceptions.InvalidUserDataException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

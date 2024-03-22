@@ -15,11 +15,7 @@ public class MessagesServlet extends HttpServlet {
     MessageService messageService;
     private final UserService userService;
     private final FreemarkerService freemarker;
-
-//    UUID idFrom = UUID.fromString("8223ae18-66c5-4960-9074-8e5ce8f3c776");
-//    UUID idTo = UUID.fromString("52b876c6-72e5-4b80-b704-3de8cf8b1e27");
-
-
+  
     public MessagesServlet() throws IOException {
         this.messageService = new MessageService(new MessageDAO());
         this.userService = new UserService(new UserDAO());
@@ -32,7 +28,6 @@ public class MessagesServlet extends HttpServlet {
         UUID idFrom = UUID.fromString(Auth.getCookieValueForced(req));
         String idToParam = req.getParameter("id");
         UUID idTo = UUID.fromString(idToParam);
-
         User chatWithUser;
         try {
             chatWithUser = userService.get(idTo);
@@ -66,13 +61,12 @@ public class MessagesServlet extends HttpServlet {
         try {
             if (messageService.addMessage(message)) {
                 try {
-
                     System.out.println(idFrom);
                     System.out.println(idTo);
                     updateChat(resp, idFrom, idTo); // Передаем idFrom и idTo
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
-                } catch (InvalidUserDataException | UserNotFoundException e) {
+                } catch (UserNotFoundException e) {
                     throw new RuntimeException(e);
                 }
             } else {
@@ -83,10 +77,7 @@ public class MessagesServlet extends HttpServlet {
         }
     }
 
-
-
-    private void updateChat(HttpServletResponse resp, UUID idFrom, UUID idTo) throws SQLException, InvalidUserDataException, UserNotFoundException {
-
+    private void updateChat(HttpServletResponse resp, UUID idFrom, UUID idTo) throws SQLException, UserNotFoundException {
         List<Message> messages = messageService.ReadMessageFromDialog(idFrom, idTo);
         User chatWithUser = userService.get(idTo);
         HashMap<String, Object> templateData = new HashMap<>();

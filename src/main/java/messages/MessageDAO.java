@@ -8,7 +8,6 @@ import java.util.*;
 
 public class MessageDAO implements DAO<Message> {
 
-
     public List<Message> get(UUID fromUserId, UUID toUserId) {
         List<Message> messages = new ArrayList<>();
         try (Connection con = Database.connect()){

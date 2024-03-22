@@ -50,11 +50,12 @@ public class UserDAO implements DAO<User> {
         }
     }
 
-    public List<User> getAll() throws SQLException {
+    public List<User> getAllExcept(UUID userId) throws SQLException {
         List<User> users = new ArrayList<>();
         try (Connection conn = Database.connect()) {
-            String selectAll = "SELECT id, username, full_name, picture, password FROM users";
-            try (PreparedStatement st = conn.prepareStatement(selectAll)) {
+            String selectAllExcept = "SELECT id, username, full_name, picture, password FROM users WHERE id != ?";
+            try (PreparedStatement st = conn.prepareStatement(selectAllExcept)) {
+                st.setObject(1, userId);
                 ResultSet rs = st.executeQuery();
                 while (rs.next()) {
                     users.add(User.fromRS(rs));
