@@ -12,19 +12,19 @@ public class HerokuEnv {
 
     public static String jdbc_url() {
         String url = System.getenv("JDBC_DATABASE_URL");
-        if (url == null) return ConnectionDetails.url;
+        if (true) return ConnectionDetails.url;
         return url;
     }
 
     public static String jdbc_username() {
         String url = System.getenv("JDBC_DATABASE_USERNAME");
-        if (url == null) return ConnectionDetails.username;
+        if (true) return ConnectionDetails.username;
         return url;
     }
 
     public static String jdbc_password() {
         String url = System.getenv("JDBC_DATABASE_PASSWORD");
-        if (url == null) return ConnectionDetails.password;
+        if (true) return ConnectionDetails.password;
         return url;
     }
 
