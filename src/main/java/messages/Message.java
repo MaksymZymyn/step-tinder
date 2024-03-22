@@ -1,13 +1,17 @@
 package messages;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import utils.exceptions.InvalidMessageDataException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.time.*;
-import java.util.*;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Getter
@@ -36,10 +40,4 @@ public class Message {
         return new Message(messageId, fromUserId, toUserId, messageText, time);
     }
 
-    public static String formatUnixTimestamp(Long timestamp) {
-        Date date = new Date(timestamp * 1000);
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, HH:mm", Locale.ENGLISH);
-        sdf.setTimeZone(TimeZone.getTimeZone("Europe/Kiev"));
-        return sdf.format(date);
-    }
 }

@@ -1,22 +1,29 @@
 package servlets;
 
 import auth.Auth;
-import likes.*;
+import likes.Like;
+import likes.LikeDAO;
+import likes.LikeService;
 import lombok.Data;
-import users.*;
+import users.User;
+import users.UserDAO;
+import users.UserService;
 import utils.FreemarkerService;
 
-import javax.servlet.http.*;
-import java.io.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.UUID;
 
 @Data
 public class UserServlet extends HttpServlet {
     UserService userService;
     LikeService likeService;
     FreemarkerService freemarker;
-    private List<User> users;
 
     public UserServlet() throws IOException {
         this.userService = new UserService(new UserDAO());
@@ -28,7 +35,6 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
             UUID currentUserId = UUID.fromString(Auth.getCookieValueForced(req));
-            users = userService.getAllExcept(currentUserId);
 
             Optional<User> targetUserOpt = likeService.getFirstAvailableUser(currentUserId);
 

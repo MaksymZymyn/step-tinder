@@ -1,6 +1,7 @@
 package users;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import utils.exceptions.InvalidUserDataException;
 import utils.misc.Password;
 
@@ -36,7 +37,8 @@ public class User {
         String picture = rs.getString("picture");
         String password = rs.getString("password");
 
-        if (id == null || username == null || fullName == null || picture == null || password == null) throw new InvalidUserDataException();
+        if (id == null || username == null || fullName == null || picture == null || password == null)
+            throw new InvalidUserDataException();
 
         return new User(id, username, fullName, picture, password);
     }

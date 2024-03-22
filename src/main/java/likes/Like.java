@@ -2,7 +2,9 @@ package likes;
 
 import lombok.*;
 import utils.exceptions.InvalidLikeDataException;
-import java.sql.*;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -18,9 +20,9 @@ public class Like {
         UUID id = rs.getObject("id", UUID.class);
         UUID user_from = rs.getObject("user_from", UUID.class);
         UUID user_to = rs.getObject("user_to", UUID.class);
-        Boolean value = rs.getBoolean("value");
+        boolean value = rs.getBoolean("value");
 
-        if (id == null || user_from == null || user_to == null || value == null) throw new InvalidLikeDataException();
+        if (id == null || user_from == null || user_to == null) throw new InvalidLikeDataException();
 
         return new Like(id, user_from, user_to, value);
     }

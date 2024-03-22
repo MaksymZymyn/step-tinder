@@ -6,10 +6,17 @@ import users.User;
 import utils.exceptions.InvalidLikeDataException;
 import utils.exceptions.InvalidUserDataException;
 import utils.interfaces.DAO;
-import java.sql.*;
-import java.util.*;
 
-public class  LikeDAO implements DAO<Like> {
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+public class LikeDAO implements DAO<Like> {
 
     @Override
     @SneakyThrows(SQLException.class)
@@ -17,7 +24,7 @@ public class  LikeDAO implements DAO<Like> {
 
         try (Connection connection = Database.connect()) {
             String sql = "INSERT INTO likes(user_from, user_to, value) " +
-                         "VALUES (?, ?, ?)";
+                    "VALUES (?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
 
             statement.setObject(1, like.getUser_from());
@@ -51,11 +58,11 @@ public class  LikeDAO implements DAO<Like> {
         List<User> likedUsers = new ArrayList<>();
         try (Connection conn = Database.connect()) {
             String selectLikedUsers = """
-                SELECT u.id, u.username, u.full_name, u.picture, u.password 
-                FROM users u
-                JOIN likes l ON u.id = l.user_to
-                WHERE l.value = true AND l.user_from=?
-                """;
+                    SELECT u.id, u.username, u.full_name, u.picture, u.password 
+                    FROM users u
+                    JOIN likes l ON u.id = l.user_to
+                    WHERE l.value = true AND l.user_from=?
+                    """;
 
             try (PreparedStatement st = conn.prepareStatement(selectLikedUsers)) {
                 st.setObject(1, userId);
@@ -73,16 +80,16 @@ public class  LikeDAO implements DAO<Like> {
     public Optional<User> getFirstAvailableUser(UUID currentUserId) throws SQLException {
         try (Connection conn = Database.connect()) {
             String selectFirstAvailableUser = """
-                SELECT u.id, u.username, u.full_name, u.picture, u.password 
-                FROM users u
-                WHERE u.id NOT IN (
-                    SELECT l.user_to 
-                    FROM likes l
-                    WHERE l.user_from = ?
-                )
-                AND u.id != ?
-                LIMIT 1
-            """;
+                        SELECT u.id, u.username, u.full_name, u.picture, u.password 
+                        FROM users u
+                        WHERE u.id NOT IN (
+                            SELECT l.user_to 
+                            FROM likes l
+                            WHERE l.user_from = ?
+                        )
+                        AND u.id != ?
+                        LIMIT 1
+                    """;
 
             try (PreparedStatement st = conn.prepareStatement(selectFirstAvailableUser)) {
                 st.setObject(1, currentUserId);

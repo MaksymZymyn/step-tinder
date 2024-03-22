@@ -1,7 +1,8 @@
 package utils.interfaces;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface DAO<A> {
 
