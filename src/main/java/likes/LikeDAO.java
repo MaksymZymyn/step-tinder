@@ -9,7 +9,7 @@ import utils.interfaces.DAO;
 import java.sql.*;
 import java.util.*;
 
-public class LikeDAO implements DAO<Like> {
+public class  LikeDAO implements DAO<Like> {
 
     @Override
     @SneakyThrows(SQLException.class)

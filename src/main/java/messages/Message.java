@@ -30,7 +30,8 @@ public class Message {
         String messageText = rs.getString("messageText");
         Long time = rs.getLong("time");
 
-        if (messageId == null || fromUserId == null || toUserId == null || messageText == null || time == null) throw new InvalidMessageDataException();
+        if (messageId == null || fromUserId == null || toUserId == null || messageText == null || time == null)
+            throw new InvalidMessageDataException();
 
         return new Message(messageId, fromUserId, toUserId, messageText, time);
     }

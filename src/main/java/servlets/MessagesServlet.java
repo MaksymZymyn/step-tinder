@@ -15,12 +15,13 @@ public class MessagesServlet extends HttpServlet {
     MessageService messageService;
     private final UserService userService;
     private final FreemarkerService freemarker;
-
+  
     public MessagesServlet() throws IOException {
         this.messageService = new MessageService(new MessageDAO());
         this.userService = new UserService(new UserDAO());
         this.freemarker = new FreemarkerService("templates");
     }
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
@@ -46,11 +47,12 @@ public class MessagesServlet extends HttpServlet {
         }
     }
 
-    @Override
+        @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         UUID idFrom = UUID.fromString(Auth.getCookieValueForced(req));
         String idToParam = req.getParameter("id");
         UUID idTo = UUID.fromString(idToParam);
+
         String messageText = req.getParameter("messageText");
         UUID fromUserId = idFrom;
         UUID toUserId = idTo;
