@@ -1,21 +1,19 @@
 package likes;
 
-import database.Database;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import users.User;
-import utils.exceptions.InvalidUserDataException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Data
 public class LikeService {
     LikeDAO likeDAO;
-  
+
     public void insert(Like like) {
         likeDAO.insert(like);
     }

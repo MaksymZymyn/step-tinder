@@ -43,6 +43,9 @@
                             <span class="fa fa-times"></span> Dislike
                         </button>
                     </form>
+                    <div class="navigate-cont">
+                        <a class="btn btn-lg btn-light" href="/logout">Logout</a>
+                    </div>
                 </div>
             </div>
         </div>

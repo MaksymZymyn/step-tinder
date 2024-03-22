@@ -1,21 +1,30 @@
 package servlets;
 
 import auth.Auth;
-import messages.*;
-import users.*;
+import messages.Message;
+import messages.MessageDAO;
+import messages.MessageService;
+import users.User;
+import users.UserDAO;
+import users.UserService;
 import utils.FreemarkerService;
 import utils.exceptions.*;
 
-import javax.servlet.http.*;
-import java.io.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 public class MessagesServlet extends HttpServlet {
     MessageService messageService;
     private final UserService userService;
     private final FreemarkerService freemarker;
-  
+
     public MessagesServlet() throws IOException {
         this.messageService = new MessageService(new MessageDAO());
         this.userService = new UserService(new UserDAO());
@@ -26,14 +35,18 @@ public class MessagesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         UUID idFrom = UUID.fromString(Auth.getCookieValueForced(req));
-        String idToParam = req.getParameter("id");
+        String idToParam;
+        try {
+            idToParam = req.getPathInfo().split("/")[1];
+        } catch (IndexOutOfBoundsException e) {
+            resp.setStatus(400);
+            return;
+        }
         UUID idTo = UUID.fromString(idToParam);
         User chatWithUser;
         try {
             chatWithUser = userService.get(idTo);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (UserNotFoundException e) {
+        } catch (SQLException | UserNotFoundException e) {
             throw new RuntimeException(e);
         }
         List<Message> messages = messageService.ReadMessageFromDialog(idFrom, idTo);
@@ -47,16 +60,20 @@ public class MessagesServlet extends HttpServlet {
         }
     }
 
-        @Override
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         UUID idFrom = UUID.fromString(Auth.getCookieValueForced(req));
-        String idToParam = req.getParameter("id");
+        String idToParam;
+        try {
+            idToParam = req.getPathInfo().split("/")[1];
+        } catch (IndexOutOfBoundsException e) {
+            resp.setStatus(400);
+            return;
+        }
         UUID idTo = UUID.fromString(idToParam);
 
         String messageText = req.getParameter("messageText");
-        UUID fromUserId = idFrom;
-        UUID toUserId = idTo;
-        Message message = new Message(fromUserId, toUserId, messageText);
+        Message message = new Message(idFrom, idTo, messageText);
         System.out.println(resp);
         try {
             if (messageService.addMessage(message)) {
@@ -64,9 +81,7 @@ public class MessagesServlet extends HttpServlet {
                     System.out.println(idFrom);
                     System.out.println(idTo);
                     updateChat(resp, idFrom, idTo); // Передаем idFrom и idTo
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                } catch (UserNotFoundException e) {
+                } catch (SQLException | UserNotFoundException e) {
                     throw new RuntimeException(e);
                 }
             } else {

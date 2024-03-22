@@ -1,10 +1,8 @@
 package servlets;
 
-import lombok.*;
-import users.UserDAO;
-import users.UserService;
-import utils.FreemarkerService;
 import auth.Auth;
+import lombok.Data;
+import utils.FreemarkerService;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

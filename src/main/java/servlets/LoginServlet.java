@@ -1,13 +1,15 @@
 package servlets;
 
 import auth.Auth;
-import lombok.*;
-import users.*;
+import lombok.Data;
+import users.User;
+import users.UserDAO;
+import users.UserService;
 import utils.FreemarkerService;
 import utils.exceptions.UserNotFoundException;
 
 import javax.servlet.http.*;
-import java.io.*;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 
