@@ -1,4 +1,3 @@
-import database.Database;
 import filters.AuthFilter;
 import filters.CharsetFilter;
 import org.eclipse.jetty.server.Server;
@@ -20,7 +19,10 @@ public class App {
     public static void main(String[] args) throws Exception {
         Server server = new Server(HerokuEnv.port());
 
-//        Database.setup();
+        System.out.println(HerokuEnv.jdbc_password());
+        System.out.println(HerokuEnv.jdbc_url());
+        System.out.println(HerokuEnv.jdbc_username());
+        System.out.println(HerokuEnv.port());
 
         ServletContextHandler handler = new ServletContextHandler();
         var sfd = EnumSet.of(DispatcherType.REQUEST);

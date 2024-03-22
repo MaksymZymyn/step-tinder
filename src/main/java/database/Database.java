@@ -14,14 +14,4 @@ public class Database {
         return DriverManager.getConnection(HerokuEnv.jdbc_url(), HerokuEnv.jdbc_username(), HerokuEnv.jdbc_password());
     }
 
-    public static void setup() {
-        FluentConfiguration config = new FluentConfiguration().dataSource(
-                HerokuEnv.jdbc_url(),
-                HerokuEnv.jdbc_username(),
-                HerokuEnv.jdbc_password()
-        );
-        Flyway flyway = new Flyway(config);
-        flyway.migrate();
-    }
-
 }
