@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS likes (
+
                        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                        user_from UUID NOT NULL,
                        user_to UUID NOT NULL,

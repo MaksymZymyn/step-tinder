@@ -1,3 +1,4 @@
+import database.Database;
 import filters.AuthFilter;
 import servlets.UserServlet;
 import org.eclipse.jetty.server.Server;
@@ -5,6 +6,9 @@ import org.eclipse.jetty.servlet.*;
 import servlets.*;
 import utils.environment.HerokuEnv;
 import javax.servlet.DispatcherType;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.EnumSet;
 
 public class App {
