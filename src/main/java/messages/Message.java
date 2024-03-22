@@ -40,4 +40,10 @@ public class Message {
         return new Message(messageId, fromUserId, toUserId, messageText, time);
     }
 
+    public static String formatUnixTimestamp(Long timestamp) {
+        Date date = new Date(timestamp * 1000);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, HH:mm", Locale.ENGLISH);
+        sdf.setTimeZone(TimeZone.getTimeZone("Europe/Kiev"));
+        return sdf.format(date);
+    }
 }
