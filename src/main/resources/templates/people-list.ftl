@@ -72,8 +72,8 @@
                         </table>
                     </div>
                 </div>
-                <div class="link-page-l">
-                    <a class="link_regLogin-l" href="/logout"><i class="fas fa-heart"></i></a>
+                <div class="navigate-cont">
+                    <a class="btn btn-lg btn-light" href="/logout">Logout</a>
                 </div>
             </div>
         </div>
