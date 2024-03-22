@@ -3,7 +3,13 @@ import filters.CharsetFilter;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import servlets.*;
+import servlets.LikeServlet;
+import servlets.LoginServlet;
+import servlets.LogoutServlet;
+import servlets.MessagesServlet;
+import servlets.RegisterServlet;
+import servlets.StaticFileServlet;
+import servlets.UserServlet;
 import utils.environment.HerokuEnv;
 
 import javax.servlet.DispatcherType;
