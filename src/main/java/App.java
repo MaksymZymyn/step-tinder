@@ -20,7 +20,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         Server server = new Server(HerokuEnv.port());
 
-        Database.setup();
+//        Database.setup();
 
         ServletContextHandler handler = new ServletContextHandler();
         var sfd = EnumSet.of(DispatcherType.REQUEST);
