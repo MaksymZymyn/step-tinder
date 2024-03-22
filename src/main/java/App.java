@@ -1,3 +1,4 @@
+import database.Database;
 import filters.AuthFilter;
 import filters.CharsetFilter;
 import org.eclipse.jetty.server.Server;
@@ -18,6 +19,8 @@ import java.util.EnumSet;
 public class App {
     public static void main(String[] args) throws Exception {
         Server server = new Server(HerokuEnv.port());
+
+        Database.setup();
 
         ServletContextHandler handler = new ServletContextHandler();
         var sfd = EnumSet.of(DispatcherType.REQUEST);
