@@ -52,11 +52,6 @@ public class RegisterServlet extends HttpServlet {
         String picture = req.getParameter("picture");
         String password = req.getParameter("password");
 
-        System.out.println(username);
-        System.out.println(fullName);
-        System.out.println(picture);
-        System.out.println(password);
-
         try {
             User user = userService.insert(username, fullName, picture, password);
 

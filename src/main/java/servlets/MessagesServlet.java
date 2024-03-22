@@ -74,12 +74,9 @@ public class MessagesServlet extends HttpServlet {
 
         String messageText = req.getParameter("messageText");
         Message message = new Message(idFrom, idTo, messageText);
-        System.out.println(resp);
         try {
             if (messageService.addMessage(message)) {
                 try {
-                    System.out.println(idFrom);
-                    System.out.println(idTo);
                     updateChat(resp, idFrom, idTo); // Передаем idFrom и idTo
                 } catch (SQLException | UserNotFoundException e) {
                     throw new RuntimeException(e);
