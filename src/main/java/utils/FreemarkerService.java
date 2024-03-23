@@ -20,6 +20,7 @@ public class FreemarkerService {
             setWrapUncheckedExceptions(true);
         }};
     }
+
     public static FreemarkerService resources() {
         try {
             return new FreemarkerService();
@@ -27,6 +28,7 @@ public class FreemarkerService {
             throw new RuntimeException(e);
         }
     }
+
     public void render(String template, HashMap<String, Object> data, HttpServletResponse resp) {
         resp.setCharacterEncoding(String.valueOf(StandardCharsets.UTF_8));
         try (PrintWriter w = resp.getWriter()) {
