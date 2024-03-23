@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+
 public class FreemarkerService {
     private final Configuration conf;
     private FreemarkerService() throws IOException {
