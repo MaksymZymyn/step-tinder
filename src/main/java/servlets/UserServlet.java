@@ -20,7 +20,7 @@ public class UserServlet extends HttpServlet {
     public UserServlet() throws IOException {
         this.userService = new UserService(new UserDAO());
         this.likeService = new LikeService(new LikeDAO());
-        this.freemarker = new FreemarkerService("templates");
+        this.freemarker = FreemarkerService.resources("/templates");
     }
 
     @Override
@@ -38,7 +38,7 @@ public class UserServlet extends HttpServlet {
                 data.put("username", targetUser.getUsername());
                 data.put("id", targetUser.getId());
 
-                freemarker.render("like-page.ftl", data, resp.getWriter());
+                freemarker.render("like-page.ftl", data, resp);
             } else {
                 resp.sendRedirect("/liked");
             }

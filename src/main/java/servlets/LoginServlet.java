@@ -17,9 +17,9 @@ public class LoginServlet extends HttpServlet {
     UserService userService;
     FreemarkerService freemarker;
 
-    public LoginServlet() throws IOException {
+    public LoginServlet()  {
         this.userService = new UserService(new UserDAO());
-        this.freemarker = new FreemarkerService("templates");
+        this.freemarker = FreemarkerService.resources("/templates");
     }
 
     @Override
@@ -33,13 +33,11 @@ public class LoginServlet extends HttpServlet {
                     }
                 },
                 () -> {
-                    try {
+
                         HashMap<String, Object> data = new HashMap<>();
                         data.put("error", "");
-                        freemarker.render("login.ftl", data, resp.getWriter());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                        freemarker.render("login.ftl", data, resp);
+
                 }
         );
     }
@@ -58,12 +56,12 @@ public class LoginServlet extends HttpServlet {
             } else {
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("error", "Invalid username or password.");
-                freemarker.render("login.ftl", data, resp.getWriter());
+                freemarker.render("login.ftl", data, resp);
             }
         } catch (SQLException | UserNotFoundException e) {
             HashMap<String, Object> data = new HashMap<>();
             data.put("error", "Invalid username or password.");
-            freemarker.render("login.ftl", data, resp.getWriter());
+            freemarker.render("login.ftl", data, resp);
         }
     }
 }

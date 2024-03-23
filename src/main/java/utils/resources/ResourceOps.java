@@ -1,5 +1,6 @@
 package utils.resources;
 
+import javax.servlet.ServletOutputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 

@@ -17,7 +17,7 @@ public class LikeServlet extends HttpServlet {
 
     public LikeServlet() throws IOException {
         this.likeService = new LikeService(new LikeDAO());
-        this.freemarker = new FreemarkerService("templates");
+        this.freemarker = FreemarkerService.resources("/templates");
     }
 
     @Override
@@ -40,8 +40,8 @@ public class LikeServlet extends HttpServlet {
         HashMap<String, Object> data = new HashMap<>();
         data.put("users", userDataList);
 
-        try (PrintWriter w = resp.getWriter()) {
-            freemarker.render("people-list.ftl", data, w);
-        }
+
+        freemarker.render("people-list.ftl", data, resp);
+
     }
 }

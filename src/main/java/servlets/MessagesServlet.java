@@ -19,7 +19,7 @@ public class MessagesServlet extends HttpServlet {
     public MessagesServlet() throws IOException {
         this.messageService = new MessageService(new MessageDAO());
         this.userService = new UserService(new UserDAO());
-        this.freemarker = new FreemarkerService("templates");
+        this.freemarker = FreemarkerService.resources("/templates");
     }
 
 
@@ -44,11 +44,9 @@ public class MessagesServlet extends HttpServlet {
         HashMap<String, Object> templateData = new HashMap<>();
         templateData.put("chatWithUser", chatWithUser);
         templateData.put("messages", messages);
-        try (PrintWriter w = resp.getWriter()) {
-            freemarker.render("chat.ftl", templateData, w);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        freemarker.render("chat.ftl", templateData, resp);
+
     }
 
     @Override
@@ -87,10 +85,8 @@ public class MessagesServlet extends HttpServlet {
         templateData.put("chatWithUser", chatWithUser);
         templateData.put("messages", messages);
 
-        try (PrintWriter w = resp.getWriter()) {
-            freemarker.render("chat.ftl", templateData, w);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        freemarker.render("chat.ftl", templateData, resp);
+
     }
 }

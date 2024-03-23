@@ -16,7 +16,7 @@ public class RegisterServlet extends HttpServlet {
 
     public RegisterServlet() throws IOException {
         this.userService = new UserService(new UserDAO());
-        this.freemarker = new FreemarkerService("templates");
+        this.freemarker = FreemarkerService.resources("/templates");
     }
 
     @Override
@@ -30,13 +30,11 @@ public class RegisterServlet extends HttpServlet {
                     }
                 },
                 () -> {
-                    try {
-                        HashMap<String, Object> data = new HashMap<>();
-                        data.put("error", "");
-                        freemarker.render("register.ftl", data, resp.getWriter());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+
+                    HashMap<String, Object> data = new HashMap<>();
+                    data.put("error", "");
+                    freemarker.render("register.ftl", data, resp);
+
                 }
         );
     }
@@ -56,7 +54,7 @@ public class RegisterServlet extends HttpServlet {
         } catch (SQLException | RegistrationException e) {
             HashMap<String, Object> data = new HashMap<>();
             data.put("error", "Registration failed. User with such username might already exist");
-            freemarker.render("register.ftl", data, resp.getWriter());
+            freemarker.render("register.ftl", data, resp);
         }
     }
 }
