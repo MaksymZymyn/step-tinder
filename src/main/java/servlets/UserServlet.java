@@ -1,23 +1,15 @@
 package servlets;
 
 import auth.Auth;
-import likes.Like;
-import likes.LikeDAO;
-import likes.LikeService;
+import likes.*;
 import lombok.Data;
-import users.User;
-import users.UserDAO;
-import users.UserService;
+import users.*;
 import utils.FreemarkerService;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 public class UserServlet extends HttpServlet {

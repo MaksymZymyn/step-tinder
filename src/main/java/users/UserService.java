@@ -1,11 +1,9 @@
 package users;
 
-import utils.exceptions.RegistrationException;
-import utils.exceptions.UserNotFoundException;
+import utils.exceptions.*;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class UserService {
     private final UserDAO dao;

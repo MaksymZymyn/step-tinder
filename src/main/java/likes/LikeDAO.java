@@ -3,18 +3,11 @@ package likes;
 import database.Database;
 import lombok.SneakyThrows;
 import users.User;
-import utils.exceptions.InvalidLikeDataException;
-import utils.exceptions.InvalidUserDataException;
+import utils.exceptions.*;
 import utils.interfaces.DAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.sql.*;
+import java.util.*;
 
 public class LikeDAO implements DAO<Like> {
 

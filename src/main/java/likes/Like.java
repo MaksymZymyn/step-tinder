@@ -3,8 +3,7 @@ package likes;
 import lombok.*;
 import utils.exceptions.InvalidLikeDataException;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.UUID;
 
 @AllArgsConstructor

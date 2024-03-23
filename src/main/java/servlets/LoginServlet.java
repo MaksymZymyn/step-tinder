@@ -2,9 +2,7 @@ package servlets;
 
 import auth.Auth;
 import lombok.Data;
-import users.User;
-import users.UserDAO;
-import users.UserService;
+import users.*;
 import utils.FreemarkerService;
 import utils.exceptions.UserNotFoundException;
 

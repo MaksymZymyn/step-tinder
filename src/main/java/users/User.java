@@ -1,12 +1,10 @@
 package users;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import utils.exceptions.InvalidUserDataException;
 import utils.misc.Password;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.UUID;
 
 @AllArgsConstructor

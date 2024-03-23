@@ -4,11 +4,8 @@ import utils.resources.ResourceOps;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.*;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.*;
+import java.nio.file.*;
 
 public class StaticFileServlet extends HttpServlet {
 

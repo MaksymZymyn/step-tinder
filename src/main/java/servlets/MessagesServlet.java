@@ -1,24 +1,15 @@
 package servlets;
 
 import auth.Auth;
-import messages.Message;
-import messages.MessageDAO;
-import messages.MessageService;
-import users.User;
-import users.UserDAO;
-import users.UserService;
+import messages.*;
+import users.*;
 import utils.FreemarkerService;
 import utils.exceptions.*;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
+import javax.servlet.http.*;
+import java.io.*;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class MessagesServlet extends HttpServlet {
     MessageService messageService;

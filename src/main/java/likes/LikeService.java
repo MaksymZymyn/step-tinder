@@ -1,13 +1,10 @@
 package likes;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import users.User;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @AllArgsConstructor
 @Data
