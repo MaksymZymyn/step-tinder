@@ -17,15 +17,17 @@ public class StaticFileServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest rq, HttpServletResponse rs) throws IOException {
-        String prefix = ResourceOps.resourceUnsafe(root);
-        String fileName = rq.getPathInfo();
-        String fullName = prefix + fileName;
 
-        if (!new File(fullName).exists()) {
+        String rqName = rq.getRequestURI();
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        try (ServletOutputStream os = rs.getOutputStream();
+             InputStream is = classLoader.getResourceAsStream(rqName.substring(1))
+        ) {
+
+            byte[] bytes = is.readAllBytes();
+            os.write(bytes);
+        } catch (NullPointerException ex) {
             rs.setStatus(404);
-        } else try (ServletOutputStream os = rs.getOutputStream()) {
-            Path path = Paths.get(fullName);
-            Files.copy(path, os);
         }
     }
 }
