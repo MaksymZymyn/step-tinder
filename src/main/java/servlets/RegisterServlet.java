@@ -16,7 +16,7 @@ public class RegisterServlet extends HttpServlet {
 
     public RegisterServlet() throws IOException {
         this.userService = new UserService(new UserDAO());
-        this.freemarker = FreemarkerService.resources("/templates");
+        this.freemarker = FreemarkerService.resources();
     }
 
     @Override

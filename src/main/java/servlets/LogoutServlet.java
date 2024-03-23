@@ -12,7 +12,7 @@ public class LogoutServlet extends HttpServlet {
     FreemarkerService freemarker;
 
     public LogoutServlet() throws IOException {
-        this.freemarker = FreemarkerService.resources("/templates");
+        this.freemarker = FreemarkerService.resources();
     }
 
     @Override

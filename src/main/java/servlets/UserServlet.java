@@ -20,7 +20,7 @@ public class UserServlet extends HttpServlet {
     public UserServlet() throws IOException {
         this.userService = new UserService(new UserDAO());
         this.likeService = new LikeService(new LikeDAO());
-        this.freemarker = FreemarkerService.resources("/templates");
+        this.freemarker = FreemarkerService.resources();
     }
 
     @Override

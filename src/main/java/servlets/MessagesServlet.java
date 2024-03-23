@@ -19,7 +19,7 @@ public class MessagesServlet extends HttpServlet {
     public MessagesServlet() throws IOException {
         this.messageService = new MessageService(new MessageDAO());
         this.userService = new UserService(new UserDAO());
-        this.freemarker = FreemarkerService.resources("/templates");
+        this.freemarker = FreemarkerService.resources();
     }
 
 

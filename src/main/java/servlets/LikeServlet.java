@@ -17,7 +17,7 @@ public class LikeServlet extends HttpServlet {
 
     public LikeServlet() throws IOException {
         this.likeService = new LikeService(new LikeDAO());
-        this.freemarker = FreemarkerService.resources("/templates");
+        this.freemarker = FreemarkerService.resources();
     }
 
     @Override

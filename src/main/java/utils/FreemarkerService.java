@@ -19,18 +19,8 @@ public class FreemarkerService {
             setWrapUncheckedExceptions(true);
         }};
     }
-    public static FreemarkerService folder(final String path_from_project_root) {
+    public static FreemarkerService resources() {
         try {
-            return new FreemarkerService();
-        } catch (IOException x) {
-            throw new RuntimeException(x);
-        }
-    }
-    public static FreemarkerService resources(final String path_from_project_resources) {
-        try {
-//            String path = Paths
-//                    .get(TemplateEngine.class.getClassLoader().getResource(path_from_project_resources).toURI())
-//                    .toFile().getAbsolutePath();
             return new FreemarkerService();
         } catch (IOException e) {
             throw new RuntimeException(e);

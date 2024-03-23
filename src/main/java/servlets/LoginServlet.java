@@ -19,7 +19,7 @@ public class LoginServlet extends HttpServlet {
 
     public LoginServlet()  {
         this.userService = new UserService(new UserDAO());
-        this.freemarker = FreemarkerService.resources("/templates");
+        this.freemarker = FreemarkerService.resources();
     }
 
     @Override
